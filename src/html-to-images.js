@@ -54,6 +54,7 @@ function loadConfig() {
   // Merge custom config with defaults
   return {
     ...defaultConfig,
+    outputDir: customConfig.outputDir || defaultConfig.outputDir,
     viewport: { ...defaultConfig.viewport, ...customConfig.viewport },
     imageFormat: customConfig.imageFormat || defaultConfig.imageFormat,
     imageQuality: customConfig.imageQuality || defaultConfig.imageQuality
@@ -186,24 +187,35 @@ async function convertHtmlToImages(htmlFilePath) {
 async function main() {
   console.log('🚀 HTML to Images Converter Started\n');
   console.log(`Resolution: ${CONFIG.viewport.width}x${CONFIG.viewport.height} @ ${CONFIG.viewport.deviceScaleFactor}x`);
-  console.log(`Effective DPI: ${300 * CONFIG.viewport.deviceScaleFactor}`);
+  console.log(`Effective DPI: ${96 * CONFIG.viewport.deviceScaleFactor}`);
 
   await ensureOutputDir();
 
-  // Scan for HTML files
-  console.log('\n📂 Scanning for HTML files...');
-  const htmlFiles = await scanHtmlFiles();
+  // Check if a specific file is provided as command line argument
+  const args = process.argv.slice(2);
+  let htmlFiles = [];
+
+  if (args.length > 0) {
+    // Process specific file(s) provided as arguments
+    console.log('\n📄 Processing specified file(s)...');
+    htmlFiles = args.map(arg => path.resolve(arg));
+  } else {
+    // Scan for HTML files
+    console.log('\n📂 Scanning for HTML files...');
+    htmlFiles = await scanHtmlFiles();
+  }
 
   if (htmlFiles.length === 0) {
-    console.log('⚠️  No HTML files found in the project directory.');
-    console.log('   Please add HTML files to the root directory or subdirectories.');
+    console.log('⚠️  No HTML files found or specified.');
+    console.log('   Usage: node html-to-images.js [file1.html] [file2.html] ...');
+    console.log('   Or add HTML files to the project directory for auto-scan.');
     return;
   }
 
   console.log(`✓ Found ${htmlFiles.length} HTML file(s):`);
   htmlFiles.forEach((file, index) => {
-    const relativePath = path.relative(path.join(__dirname, '..'), file);
-    console.log(`  ${index + 1}. ${relativePath}`);
+    const fileName = path.basename(file);
+    console.log(`  ${index + 1}. ${fileName}`);
   });
 
   let totalPages = 0;

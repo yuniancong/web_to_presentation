@@ -268,6 +268,118 @@
             color: #666;
             line-height: 1.6;
         }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f9f9ff;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f0f0ff;
+            transform: translateY(-2px);
+        }
+
+        .upload-area.drag-over {
+            border-color: #764ba2;
+            background: #e8e8ff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .upload-text strong {
+            font-size: 16px;
+            color: #333;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .upload-text p {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+
+        .uploaded-files {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: #f9f9f9;
+        }
+
+        .uploaded-file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .uploaded-file-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .file-name {
+            flex: 1;
+            font-weight: 500;
+            color: #333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+
+        .file-size {
+            color: #666;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+
+        .btn-remove {
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-remove:hover {
+            background: #cc0000;
+        }
+
+        .btn-clear {
+            background: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-clear:hover {
+            background: #e0e0e0;
+        }
     </style>
 </head>
 <body>
@@ -278,6 +390,46 @@
         </div>
 
         <div class="content">
+            <!-- 文件上传区域 -->
+            <div class="section">
+                <h2 class="section-title">📁 选择HTML文件</h2>
+
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📤</div>
+                    <div class="upload-text">
+                        <strong>拖拽HTML文件到这里</strong>
+                        <p>或点击选择文件</p>
+                    </div>
+                    <input type="file" id="fileInput" multiple accept=".html,.htm" style="display: none;">
+                </div>
+
+                <div id="uploadedFilesList" class="uploaded-files" style="display: none;">
+                    <div style="font-weight: 600; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>已选择的文件：</span>
+                        <button class="btn-clear" onclick="clearUploadedFiles()">清空</button>
+                    </div>
+                    <div id="uploadedFilesContent"></div>
+                </div>
+
+                <div class="info-box" style="margin-top: 15px;">
+                    💡 支持多文件上传，可以同时拖拽或选择多个HTML文件
+                </div>
+            </div>
+
+            <!-- 输出设置 -->
+            <div class="section">
+                <h2 class="section-title">📂 输出设置</h2>
+
+                <div class="form-group">
+                    <label for="outputPath">输出目录（可选）</label>
+                    <input type="text" id="outputPath" placeholder="留空使用默认路径: output/"
+                           style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                    <div class="info-box" style="margin-top: 10px;">
+                        默认输出到项目的 output 目录，您可以指定其他相对或绝对路径
+                    </div>
+                </div>
+            </div>
+
             <!-- 图片设置 -->
             <div class="section">
                 <h2 class="section-title">📷 图片设置</h2>
@@ -363,15 +515,6 @@
                 </div>
             </div>
 
-            <!-- HTML文件扫描 -->
-            <div class="section">
-                <h2 class="section-title">📂 HTML文件扫描</h2>
-                <button class="btn btn-secondary" onclick="scanFiles()">
-                    <span>🔍</span> 扫描HTML文件
-                </button>
-                <div id="fileList" class="file-list" style="display: none;"></div>
-            </div>
-
             <!-- 转换控制 -->
             <div class="button-group">
                 <button class="btn btn-primary" onclick="startConversion()" id="convertBtn">
@@ -394,6 +537,104 @@
         // 配置 - 自动使用当前页面的协议和主机（包括端口）
         const API_BASE = window.location.origin;
 
+        // 存储上传的文件
+        let uploadedFiles = [];
+
+        // 文件拖拽和上传处理
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+
+        // 点击上传区域触发文件选择
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // 文件选择处理
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        // 拖拽事件处理
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadArea.classList.add('drag-over');
+        });
+
+        uploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadArea.classList.remove('drag-over');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadArea.classList.remove('drag-over');
+
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        // 处理选择的文件
+        function handleFiles(files) {
+            const validFiles = Array.from(files).filter(file => {
+                return file.name.endsWith('.html') || file.name.endsWith('.htm');
+            });
+
+            if (validFiles.length === 0) {
+                showStatus('请选择HTML文件！', 'error');
+                return;
+            }
+
+            // 添加到已上传文件列表
+            uploadedFiles = [...uploadedFiles, ...validFiles];
+            updateUploadedFilesList();
+            showStatus(`成功添加 ${validFiles.length} 个文件`, 'success');
+        }
+
+        // 更新已上传文件列表显示
+        function updateUploadedFilesList() {
+            const listContainer = document.getElementById('uploadedFilesList');
+            const contentContainer = document.getElementById('uploadedFilesContent');
+
+            if (uploadedFiles.length === 0) {
+                listContainer.style.display = 'none';
+                return;
+            }
+
+            listContainer.style.display = 'block';
+            contentContainer.innerHTML = uploadedFiles.map((file, index) => `
+                <div class="uploaded-file-item">
+                    <span class="file-name">📄 ${file.name}</span>
+                    <span class="file-size">${formatFileSize(file.size)}</span>
+                    <button class="btn-remove" onclick="removeFile(${index})">删除</button>
+                </div>
+            `).join('');
+        }
+
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / 1024 / 1024).toFixed(2) + ' MB';
+        }
+
+        // 删除单个文件
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            updateUploadedFilesList();
+            showStatus('文件已删除', 'info');
+        }
+
+        // 清空所有文件
+        function clearUploadedFiles() {
+            uploadedFiles = [];
+            fileInput.value = '';
+            updateUploadedFilesList();
+            showStatus('已清空所有文件', 'info');
+        }
+
         // 更新range显示值
         document.getElementById('imageScale').addEventListener('input', (e) => {
             document.getElementById('imageScaleValue').textContent = e.target.value + 'x';
@@ -407,6 +648,7 @@
         function getSettings() {
             return {
                 exportType: document.getElementById('exportType').value,
+                outputPath: document.getElementById('outputPath').value.trim() || null,
                 image: {
                     deviceScaleFactor: parseInt(document.getElementById('imageScale').value),
                     quality: parseInt(document.getElementById('imageQuality').value),
@@ -435,45 +677,37 @@
         // 监听导出类型变化
         document.getElementById('exportType').addEventListener('change', updatePptSettingsVisibility);
 
-        // 扫描HTML文件
-        async function scanFiles() {
-            try {
-                showStatus('正在扫描HTML文件...', 'info');
-                const response = await fetch(`${API_BASE}/api/scan`);
-                const data = await response.json();
-
-                if (data.success) {
-                    const fileList = document.getElementById('fileList');
-                    fileList.style.display = 'block';
-                    fileList.innerHTML = `
-                        <div style="font-weight: 600; margin-bottom: 10px;">找到 ${data.files.length} 个HTML文件：</div>
-                        ${data.files.map(file => `<div class="file-item">📄 ${file}</div>`).join('')}
-                    `;
-                    showStatus(`成功扫描到 ${data.files.length} 个HTML文件`, 'success');
-                } else {
-                    showStatus('扫描失败: ' + data.error, 'error');
-                }
-            } catch (error) {
-                showStatus('无法连接到后端服务: ' + error.message, 'error');
-            }
-        }
-
         // 开始转换
         async function startConversion() {
+            // 验证文件
+            if (uploadedFiles.length === 0) {
+                showStatus('请先上传HTML文件！', 'error');
+                return;
+            }
+
             const settings = getSettings();
             const convertBtn = document.getElementById('convertBtn');
 
             try {
                 convertBtn.disabled = true;
-                showStatus('正在启动转换...', 'info');
+                showStatus('正在上传文件...', 'info');
                 showProgress(0);
 
+                // 创建FormData上传文件
+                const formData = new FormData();
+
+                // 添加所有文件
+                uploadedFiles.forEach(file => {
+                    formData.append('files', file);
+                });
+
+                // 添加设置
+                formData.append('settings', JSON.stringify(settings));
+
+                // 上传文件并启动转换
                 const response = await fetch(`${API_BASE}/api/convert`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(settings)
+                    body: formData
                 });
 
                 const data = await response.json();
@@ -540,21 +774,19 @@
             document.getElementById('imageScale').value = 3;
             document.getElementById('imageQuality').value = 100;
             document.getElementById('imageFormat').value = 'png';
+            document.getElementById('exportType').value = 'both';
             document.getElementById('exportMode').value = 'hybrid';
             document.getElementById('extractText').checked = true;
             document.getElementById('separateReports').checked = true;
             document.getElementById('createCombined').checked = true;
+            document.getElementById('outputPath').value = '';
 
             document.getElementById('imageScaleValue').textContent = '3x';
             document.getElementById('imageQualityValue').textContent = '100%';
 
+            updatePptSettingsVisibility();
             showStatus('设置已重置为默认值', 'success');
         }
-
-        // 页面加载时自动扫描文件
-        window.addEventListener('load', () => {
-            scanFiles();
-        });
     </script>
 </body>
 </html>

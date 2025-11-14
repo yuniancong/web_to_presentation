@@ -235,6 +235,8 @@ def main():
     """Main execution"""
     parser = argparse.ArgumentParser(description='Convert images to PowerPoint')
     parser.add_argument('--settings', type=str, help='Settings JSON string')
+    parser.add_argument('--images-dir', type=str, help='Custom images directory')
+    parser.add_argument('--output-dir', type=str, help='Custom output directory')
     args = parser.parse_args()
 
     # Parse settings
@@ -252,8 +254,16 @@ def main():
             'createCombined': True
         }
 
+    # Override directories if provided
+    if args.images_dir:
+        CONFIG['images_dir'] = args.images_dir
+    if args.output_dir:
+        CONFIG['output_dir'] = args.output_dir
+
     print("🚀 Advanced Images to PowerPoint Converter Started\n")
-    print(f"Settings: {json.dumps(settings, indent=2)}\n")
+    print(f"Settings: {json.dumps(settings, indent=2)}")
+    print(f"Images directory: {CONFIG['images_dir']}")
+    print(f"Output directory: {CONFIG['output_dir']}\n")
 
     # Check if images directory exists
     if not os.path.exists(CONFIG['images_dir']):
