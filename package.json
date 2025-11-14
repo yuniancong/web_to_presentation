@@ -4,6 +4,7 @@
   "description": "Convert HTML reports to high-resolution images and PowerPoint presentations",
   "main": "src/html-to-images.js",
   "scripts": {
+    "start": "python3 start.py",
     "convert": "node src/html-to-images.js",
     "test": "node src/html-to-images.js"
   },

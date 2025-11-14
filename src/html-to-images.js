@@ -9,31 +9,58 @@ const fs = require('fs').promises;
 const path = require('path');
 const { glob } = require('glob');
 
-// Configuration
-const CONFIG = {
-  outputDir: path.join(__dirname, '../output/images'),
-  // Scan patterns for HTML files (will scan root directory and subdirectories)
-  scanPatterns: [
-    path.join(__dirname, '../*.html'),           // Root directory
-    path.join(__dirname, '../**/*.html'),        // All subdirectories
-  ],
-  // Exclude patterns (files/folders to ignore)
-  excludePatterns: [
-    '**/node_modules/**',
-    '**/output/**',
-    '**/.git/**',
-    '**/dist/**',
-    '**/build/**'
-  ],
-  // A4 landscape dimensions in pixels at 96 DPI (standard screen DPI)
-  viewport: {
-    width: 1122,  // 297mm at 96 DPI
-    height: 794,  // 210mm at 96 DPI
-    deviceScaleFactor: 3 // For high quality (effectively 288 DPI)
-  },
-  imageFormat: 'png',
-  imageQuality: 100
-};
+// Load configuration
+function loadConfig() {
+  const configPath = path.join(__dirname, 'html-to-images-config.json');
+  let customConfig = {};
+
+  try {
+    if (require('fs').existsSync(configPath)) {
+      const configData = require('fs').readFileSync(configPath, 'utf-8');
+      customConfig = JSON.parse(configData);
+      console.log('✓ Loaded custom configuration');
+    }
+  } catch (error) {
+    console.log('⚠ Using default configuration');
+  }
+
+  // Default configuration
+  const defaultConfig = {
+    outputDir: path.join(__dirname, '../output/images'),
+    // Scan patterns for HTML files (will scan root directory and subdirectories)
+    scanPatterns: [
+      path.join(__dirname, '../*.html'),           // Root directory
+      path.join(__dirname, '../**/*.html'),        // All subdirectories
+    ],
+    // Exclude patterns (files/folders to ignore)
+    excludePatterns: [
+      '**/node_modules/**',
+      '**/output/**',
+      '**/.git/**',
+      '**/dist/**',
+      '**/build/**',
+      '**/frontend/**'
+    ],
+    // A4 landscape dimensions in pixels at 96 DPI (standard screen DPI)
+    viewport: {
+      width: 1122,  // 297mm at 96 DPI
+      height: 794,  // 210mm at 96 DPI
+      deviceScaleFactor: 3 // For high quality (effectively 288 DPI)
+    },
+    imageFormat: 'png',
+    imageQuality: 100
+  };
+
+  // Merge custom config with defaults
+  return {
+    ...defaultConfig,
+    viewport: { ...defaultConfig.viewport, ...customConfig.viewport },
+    imageFormat: customConfig.imageFormat || defaultConfig.imageFormat,
+    imageQuality: customConfig.imageQuality || defaultConfig.imageQuality
+  };
+}
+
+const CONFIG = loadConfig();
 
 /**
  * Scan for HTML files in the project
