@@ -257,13 +257,16 @@ def serve_static(path):
 
 def main():
     """Start the API server"""
+    # Support configurable port via environment variable or default to 5001
+    port = int(os.environ.get('PORT', 5001))
+
     print('🚀 Starting API Server...')
     print(f'📁 Project root: {PROJECT_ROOT}')
-    print('🌐 Server running on http://localhost:5000')
-    print('📊 Frontend: http://localhost:5000/frontend')
+    print(f'🌐 Server running on http://localhost:{port}')
+    print(f'📊 Frontend: http://localhost:{port}/frontend')
     print('\nPress Ctrl+C to stop the server\n')
 
-    app.run(host='0.0.0.0', port=5000, debug=False, threaded=True)
+    app.run(host='0.0.0.0', port=port, debug=False, threaded=True)
 
 
 if __name__ == '__main__':
