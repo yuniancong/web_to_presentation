@@ -122,13 +122,16 @@ async function convertHtmlToImages(htmlFilePath) {
     ]
   });
 
-  const page = await browser.newPage();
-
-  // Set viewport to A4 landscape at high DPI
-  await page.setViewportSize({
-    width: CONFIG.viewport.width,
-    height: CONFIG.viewport.height
+  // Create a new context with device scale factor
+  const context = await browser.newContext({
+    viewport: {
+      width: CONFIG.viewport.width,
+      height: CONFIG.viewport.height
+    },
+    deviceScaleFactor: CONFIG.viewport.deviceScaleFactor
   });
+
+  const page = await context.newPage();
 
   // Load the HTML file
   const fileUrl = `file://${htmlFilePath}`;
@@ -172,6 +175,7 @@ async function convertHtmlToImages(htmlFilePath) {
   }
 
   await page.close();
+  await context.close();
   await browser.close();
   return pageElements.length;
 }

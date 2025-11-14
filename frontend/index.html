@@ -310,12 +310,31 @@
                 </div>
             </div>
 
-            <!-- PPT设置 -->
+            <!-- 导出类型选择 -->
             <div class="section">
+                <h2 class="section-title">📦 导出类型</h2>
+
+                <div class="form-group">
+                    <label for="exportType">选择导出格式</label>
+                    <select id="exportType">
+                        <option value="both">图片 + PPT（两者都导出）</option>
+                        <option value="images">仅图片</option>
+                        <option value="ppt">仅PPT</option>
+                    </select>
+                    <div class="info-box" style="margin-top: 10px;">
+                        <strong>图片 + PPT：</strong>同时导出高清图片和PPT文件<br>
+                        <strong>仅图片：</strong>只生成高清图片文件<br>
+                        <strong>仅PPT：</strong>只生成PPT文件（需要已有图片）
+                    </div>
+                </div>
+            </div>
+
+            <!-- PPT设置 -->
+            <div class="section" id="pptSettings">
                 <h2 class="section-title">📊 PPT设置</h2>
 
                 <div class="form-group">
-                    <label for="exportMode">导出模式</label>
+                    <label for="exportMode">PPT导出模式</label>
                     <select id="exportMode">
                         <option value="image">图片模式（高清截图）</option>
                         <option value="hybrid">混合模式（文字矢量 + 图片）</option>
@@ -387,6 +406,7 @@
         // 获取当前设置
         function getSettings() {
             return {
+                exportType: document.getElementById('exportType').value,
                 image: {
                     deviceScaleFactor: parseInt(document.getElementById('imageScale').value),
                     quality: parseInt(document.getElementById('imageQuality').value),
@@ -400,6 +420,20 @@
                 }
             };
         }
+
+        // 根据导出类型切换PPT设置的显示/隐藏
+        function updatePptSettingsVisibility() {
+            const exportType = document.getElementById('exportType').value;
+            const pptSettings = document.getElementById('pptSettings');
+            if (exportType === 'images') {
+                pptSettings.style.display = 'none';
+            } else {
+                pptSettings.style.display = 'block';
+            }
+        }
+
+        // 监听导出类型变化
+        document.getElementById('exportType').addEventListener('change', updatePptSettingsVisibility);
 
         // 扫描HTML文件
         async function scanFiles() {
