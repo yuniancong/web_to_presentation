@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比亚迪半导体×理想汽车合作机会评估报告</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif;
+            background-color: #e5e5e5;
+            padding: 20px;
+        }
+
+        /* 横置A4页面 */
+        .page {
+            width: 297mm;
+            height: 210mm;
+            margin: 0 auto 20px;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            page-break-after: always;
+            overflow: hidden;
+        }
+
+        /* ========== 封面页样式 ========== */
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .cover-top {
+            flex: 1;
+            width: 100%;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cover-company {
+            font-size: 48px;
+            font-weight: bold;
+            color: #e60012;
+            margin-bottom: 30px;
+            letter-spacing: 6px;
+        }
+
+        .cover-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .cover-subtitle {
+            font-size: 20px;
+            color: #666;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .cover-bottom {
+            width: 100%;
+            height: 40%;
+            background-color: #e60012;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 30px 40px;
+        }
+
+        .cover-logo {
+            width: 70px;
+            height: 70px;
+            border: 6px solid white;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .cover-logo::before {
+            content: '';
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            border: 5px solid white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .cover-logo::after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background-color: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .cover-date {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .cover-slogan {
+            color: white;
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+
+        /* ========== 内容页样式 ========== */
+        .content-page {
+            padding: 0;
+            position: relative;
+        }
+
+        /* 红色顶部标题栏 */
+        .page-header {
+            background: linear-gradient(135deg, #c50010 0%, #e60012 100%);
+            color: white;
+            padding: 16px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            position: relative;
+            clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 100%, 0 100%);
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 180px;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 100%);
+            transform: skewX(-20deg);
+        }
+
+        /* 内容区域 */
+        .page-content {
+            padding: 18px 40px 45px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 小标题 */
+        .section-title {
+            color: #e60012;
+            font-size: 15px;
+            font-weight: bold;
+            margin: 12px 0 8px 0;
+            padding-left: 10px;
+            border-left: 4px solid #e60012;
+        }
+
+        /* 表格样式 */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0;
+            font-size: 10px;
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, #d9534f 0%, #e74c3c 100%);
+            color: white;
+            padding: 8px 5px;
+            text-align: center;
+            font-weight: normal;
+            border: 1px solid #ddd;
+            line-height: 1.2;
+        }
+
+        .data-table td {
+            padding: 6px 5px;
+            border: 1px solid #ddd;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .data-table tr:nth-child(odd) {
+            background-color: white;
+        }
+
+        .data-table td.text-left {
+            text-align: left;
+        }
+
+        .data-table td.highlight {
+            background-color: #fff3cd;
+            font-weight: bold;
+        }
+
+        /* 图表容器 */
+        .chart-container {
+            margin: 8px 0;
+            padding: 8px;
+            background-color: #fafafa;
+            border-radius: 5px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 180px;
+        }
+
+        /* 要点列表 */
+        .bullet-list {
+            list-style: none;
+            padding-left: 0;
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        .bullet-list li {
+            padding: 3px 0 3px 16px;
+            position: relative;
+        }
+
+        .bullet-list li:before {
+            content: "●";
+            color: #e60012;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* 两列布局 */
+        .two-column {
+            display: flex;
+            gap: 15px;
+            margin: 8px 0;
+        }
+
+        .column {
+            flex: 1;
+        }
+
+        /* 数据卡片 */
+        .data-card {
+            background-color: #f8f9fa;
+            border-left: 4px solid #e60012;
+            padding: 10px;
+            margin: 6px 0;
+            font-size: 10px;
+        }
+
+        .data-card-title {
+            font-weight: bold;
+            color: #e60012;
+            margin-bottom: 5px;
+            font-size: 11px;
+        }
+
+        /* 页脚 */
+        .page-footer {
+            position: absolute;
+            bottom: 12px;
+            right: 40px;
+            font-size: 9px;
+            color: #999;
+        }
+
+        /* ========== 最后页样式 ========== */
+        .thankyou-page {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .thankyou-top {
+            flex: 1;
+            width: 100%;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .thankyou-text {
+            font-size: 64px;
+            font-weight: bold;
+            color: #e60012;
+            letter-spacing: 8px;
+        }
+
+        .thankyou-bottom {
+            width: 100%;
+            height: 40%;
+            background-color: #e60012;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 30px 40px;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            .page {
+                margin: 0;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 封面页 -->
+<div class="page cover-page">
+    <div class="cover-top">
+        <div class="cover-company">比亚迪半导体 × 理想汽车</div>
+        <div class="cover-title">合作机会评估报告</div>
+        <div class="cover-subtitle">2025年1-9月数据分析</div>
+    </div>
+    <div class="cover-date">战略销售支持部  2025年10月</div>
+    <div class="cover-bottom">
+        <div class="cover-logo"></div>
+        <div class="cover-slogan">BUILD YOUR DREAMS</div>
+    </div>
+</div>
+
+<!-- 第1页：理想汽车2025年1-9月销售情况 -->
+<div class="page content-page">
+    <div class="page-header">理想汽车2025年1-9月销售情况</div>
+    <div class="page-content">
+        <div class="section-title">月度销量趋势</div>
+
+        <div class="chart-container">
+            <div class="chart-wrapper" style="height: 150px;">
+                <canvas id="monthlySalesChart"></canvas>
+            </div>
+        </div>
+
+        <table class="data-table" style="margin-top: 8px;">
+            <thead>
+                <tr>
+                    <th>月份</th>
+                    <th>1月</th>
+                    <th>2月</th>
+                    <th>3月</th>
+                    <th>4月</th>
+                    <th>5月</th>
+                    <th>6月</th>
+                    <th>7月</th>
+                    <th>8月</th>
+                    <th>9月</th>
+                    <th>累计</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="font-weight: bold;">销量(台)</td>
+                    <td>29,927</td>
+                    <td>26,264</td>
+                    <td>36,674</td>
+                    <td>33,939</td>
+                    <td>40,856</td>
+                    <td>36,279</td>
+                    <td>30,731</td>
+                    <td>28,529</td>
+                    <td>33,951</td>
+                    <td style="font-weight: bold; background-color: #f0f0f0;">297,149</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">环比</td>
+                    <td>-</td>
+                    <td style="color: #ea4335;">-12.2%</td>
+                    <td style="color: #34a853;">+39.6%</td>
+                    <td style="color: #ea4335;">-7.5%</td>
+                    <td style="color: #34a853;">+20.4%</td>
+                    <td style="color: #ea4335;">-11.2%</td>
+                    <td style="color: #ea4335;">-15.3%</td>
+                    <td style="color: #ea4335;">-7.2%</td>
+                    <td style="color: #34a853;">+19.0%</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-title">分车型销量结构</div>
+
+        <div class="two-column">
+            <div class="column">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>车型</th>
+                            <th>数量<br>(万台)</th>
+                            <th>动力<br>形式</th>
+                            <th>价格区间<br>(万元)</th>
+                            <th>占比</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight">
+                            <td>L6</td>
+                            <td>13.5</td>
+                            <td>增程式</td>
+                            <td>24.98-27.98</td>
+                            <td>45.33%</td>
+                        </tr>
+                        <tr>
+                            <td>L7</td>
+                            <td>6.5</td>
+                            <td>增程式</td>
+                            <td>28.98-34.98</td>
+                            <td>21.87%</td>
+                        </tr>
+                        <tr>
+                            <td>L8</td>
+                            <td>3.6</td>
+                            <td>增程式</td>
+                            <td>32.98-39.98</td>
+                            <td>12.09%</td>
+                        </tr>
+                        <tr>
+                            <td>L9</td>
+                            <td>3.8</td>
+                            <td>增程式</td>
+                            <td>42.98-47.98</td>
+                            <td>12.84%</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td>MEGA</td>
+                            <td>1.5</td>
+                            <td>纯电</td>
+                            <td>55.98</td>
+                            <td>5.05%</td>
+                        </tr>
+                        <tr>
+                            <td>i8</td>
+                            <td>0.8</td>
+                            <td>纯电</td>
+                            <td>33.98-43.98</td>
+                            <td>2.67%</td>
+                        </tr>
+                        <tr>
+                            <td>i6</td>
+                            <td>0.04</td>
+                            <td>纯电</td>
+                            <td>24.98-29.98</td>
+                            <td>0.14%</td>
+                        </tr>
+                        <tr style="background-color: #f0f0f0; font-weight: bold;">
+                            <td>合计</td>
+                            <td>29.74</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>100%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="column">
+                <div class="data-card">
+                    <div class="data-card-title">销量关键数据</div>
+                    <ul class="bullet-list">
+                        <li>1-9月累计交付: 29.74万台</li>
+                        <li>2025年全年预计: 30-35万台</li>
+                        <li>增程式车型占比: 92.13%</li>
+                        <li>纯电车型占比: 7.86%</li>
+                        <li>L6是销量担当，占比45.33%</li>
+                    </ul>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-card-title">产品线战略</div>
+                    <ul class="bullet-list">
+                        <li><strong>增程式(L系列)</strong>: 主力现金牛，覆盖25-47万价格带</li>
+                        <li><strong>纯电(MEGA/i系列)</strong>: 战略转型方向，800V高压平台</li>
+                        <li><strong>技术特点</strong>: L系列750V平台，i系列800V/5C超充</li>
+                        <li><strong>目标客群</strong>: 30-55岁家庭用户，注重空间与智能化</li>
+                    </ul>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-card-title">估算销售额(1-9月)</div>
+                    <ul class="bullet-list">
+                        <li>按指导价估算: 约668亿元</li>
+                        <li>含选装包实际: 约730-750亿元</li>
+                        <li>增程式贡献: 约578亿元(86.6%)</li>
+                        <li>纯电贡献: 约90亿元(13.4%)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">数据来源: 理想汽车官方月度销量公告 | 仅供内部销售策略使用</div>
+</div>
+
+<!-- 第2页：市场容量-增程式SUV市场TOP10 -->
+<div class="page content-page">
+    <div class="page-header">一、客户所在市场总容量情况统计（需统计前十）- 新能源汽车行业</div>
+    <div class="page-content">
+        <div class="section-title">1.0 新能源汽车市场整体格局 - Top 10厂商（2025年1-9月）</div>
+
+        <table class="data-table" style="margin: 8px 0; font-size: 9px;">
+            <thead>
+                <tr>
+                    <th>排名</th>
+                    <th>厂商</th>
+                    <th>9月销量<br>(万辆)</th>
+                    <th>同比</th>
+                    <th>市场份额</th>
+                    <th>1-9月累计<br>(万辆)</th>
+                    <th>主力产品</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>比亚迪</td>
+                    <td>39.31</td>
+                    <td style="color: #ea4335;">-5.5%</td>
+                    <td>26.3%</td>
+                    <td>280-300</td>
+                    <td>王朝、海洋、腾势</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>吉利汽车</td>
+                    <td>16.52</td>
+                    <td style="color: #34a853;">+81%</td>
+                    <td>11.1%</td>
+                    <td>140-150</td>
+                    <td>吉利、极氪、银河</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>特斯拉中国</td>
+                    <td>9.08</td>
+                    <td style="color: #34a853;">+24%</td>
+                    <td>6.1%</td>
+                    <td>70-80</td>
+                    <td>Model 3/Y</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>长安汽车</td>
+                    <td>9.01</td>
+                    <td style="color: #34a853;">+87%</td>
+                    <td>6.0%</td>
+                    <td>75-85</td>
+                    <td>深蓝、阿维塔</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>上汽通用五菱</td>
+                    <td>8.88</td>
+                    <td>-</td>
+                    <td>5.9%</td>
+                    <td>65-75</td>
+                    <td>宏光MINI、缤果</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>奇瑞汽车</td>
+                    <td>8.54</td>
+                    <td>-</td>
+                    <td>5.7%</td>
+                    <td>60-70</td>
+                    <td>奇瑞、iCAR</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>零跑汽车</td>
+                    <td>6.67</td>
+                    <td style="color: #34a853;">+285%</td>
+                    <td>4.5%</td>
+                    <td>45-50</td>
+                    <td>C系列</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>长城汽车</td>
+                    <td>4.59</td>
+                    <td style="color: #34a853;">+37%</td>
+                    <td>3.1%</td>
+                    <td>35-40</td>
+                    <td>欧拉、魏牌</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>小米汽车</td>
+                    <td>4.19</td>
+                    <td>-</td>
+                    <td>2.8%</td>
+                    <td>30-35</td>
+                    <td>SU7</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>小鹏汽车</td>
+                    <td>4.16</td>
+                    <td style="color: #34a853;">+230%</td>
+                    <td>2.8%</td>
+                    <td>35-40</td>
+                    <td>MONA M03、P7+</td>
+                </tr>
+                <tr class="highlight" style="background-color: #fff3cd !important;">
+                    <td><strong>11-15</strong></td>
+                    <td><strong>理想汽车</strong></td>
+                    <td><strong>3.40</strong></td>
+                    <td style="color: #34a853;"><strong>+15%</strong></td>
+                    <td><strong>2.3%</strong></td>
+                    <td><strong>29.7</strong></td>
+                    <td><strong>L6/L7/L8/L9</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="data-card" style="margin: 8px 0;">
+            <div class="data-card-title">理想汽车在新能源市场的定位</div>
+            <ul class="bullet-list" style="columns: 2; column-gap: 15px;">
+                <li><strong>市场排名</strong>: 11-15位，市场份额2.3%</li>
+                <li><strong>规模体量</strong>: 1-9月交付29.7万辆，约为比亚迪的1/10</li>
+                <li><strong>产品定位</strong>: 中高端增程式+纯电SUV，均价30-40万元</li>
+                <li><strong>竞争对手</strong>: 直接竞品为问界（华为系）、蔚来、小鹏</li>
+                <li><strong>增长态势</strong>: 9月同比+15%，表现稳健但不突出</li>
+                <li><strong>战略机会</strong>: 中等规模客户，采购需求稳定，国产化意愿强</li>
+            </ul>
+        </div>
+
+        <div class="section-title" style="margin-top: 12px;">1.1 增程式中大型SUV市场TOP10（2025年1-9月）</div>
+
+        <div class="two-column">
+            <div class="column">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>车企/车型</th>
+                            <th>销量<br>(万台)</th>
+                            <th>市场<br>份额</th>
+                            <th>价格带<br>(万元)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight">
+                            <td>1</td>
+                            <td>理想L6</td>
+                            <td>13.5</td>
+                            <td>13.8%</td>
+                            <td>24.98-27.98</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td>2</td>
+                            <td>理想L7</td>
+                            <td>6.5</td>
+                            <td>6.7%</td>
+                            <td>28.98-34.98</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>问界M7</td>
+                            <td>6.2</td>
+                            <td>6.4%</td>
+                            <td>24.98-32.98</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td>4</td>
+                            <td>理想L9</td>
+                            <td>3.8</td>
+                            <td>3.9%</td>
+                            <td>42.98-47.98</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>问界M9</td>
+                            <td>3.6</td>
+                            <td>3.7%</td>
+                            <td>46.98-56.98</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td>6</td>
+                            <td>理想L8</td>
+                            <td>3.6</td>
+                            <td>3.7%</td>
+                            <td>32.98-39.98</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>岚图梦想家</td>
+                            <td>2.9</td>
+                            <td>3.0%</td>
+                            <td>36.99-63.99</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>问界M5</td>
+                            <td>2.7</td>
+                            <td>2.8%</td>
+                            <td>24.98-27.98</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>腾势D9</td>
+                            <td>2.5</td>
+                            <td>2.6%</td>
+                            <td>33.58-45.98</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>深蓝S7</td>
+                            <td>2.3</td>
+                            <td>2.4%</td>
+                            <td>14.99-20.29</td>
+                        </tr>
+                        <tr style="background-color: #f0f0f0;">
+                            <td>-</td>
+                            <td>其他</td>
+                            <td>49.9</td>
+                            <td>51.1%</td>
+                            <td>-</td>
+                        </tr>
+                        <tr style="background-color: #e8e8e8; font-weight: bold;">
+                            <td colspan="2">市场合计</td>
+                            <td>97.5</td>
+                            <td>100%</td>
+                            <td>均价约35万</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="column">
+                <div class="data-card">
+                    <div class="data-card-title">市场总容量</div>
+                    <ul class="bullet-list">
+                        <li>1-9月市场总销量: 97.5万台</li>
+                        <li>全年预测: 130-145万台</li>
+                        <li>市场总金额: 3,412.5亿元(1-9月)</li>
+                        <li><strong>理想汽车市场份额: 27.9%（4款车型）</strong></li>
+                        <li><strong>理想L系列在增程SUV市场份额: 约49%</strong></li>
+                    </ul>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-card-title">理想汽车市场地位</div>
+                    <ul class="bullet-list">
+                        <li>🏆 占据TOP10中4席（L6/L7/L8/L9）</li>
+                        <li>🏆 L6/L7排名第1、第2位</li>
+                        <li>🏆 L9是唯一超40万爆款增程SUV</li>
+                        <li>💰 产品矩阵完善: 覆盖25-47万全价格带</li>
+                    </ul>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-card-title">关键器件年需求量(按130万台计)</div>
+                    <ul class="bullet-list">
+                        <li>IGBT模块(750V级): 780-1,450万颗</li>
+                        <li>车规级MCU: 5,850-10,585万颗</li>
+                        <li>车规级LED: 6.5-7.25亿颗</li>
+                        <li>电流传感器: 1,040-1,740万颗</li>
+                    </ul>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-card-title">对比亚迪半导体的战略意义</div>
+                    <ul class="bullet-list">
+                        <li>理想L系列年销约27万台，是单一客户中最大的IGBT需求方</li>
+                        <li>L6单车型年销超18万台，可支撑数亿元芯片采购</li>
+                        <li>理想愿意扶持国产芯片（与汇川深度绑定）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">数据来源: 乘联会、懂车帝、易车网 (2025年1-9月) | 仅供内部销售策略使用</div>
+</div>
+
+<!-- 第3页：市场容量-800V纯电市场TOP10 -->
+<div class="page content-page">
+    <div class="page-header">一、客户所在市场总容量情况统计（续）- 新能源汽车行业</div>
+    <div class="page-content">
+        <div class="section-title">1.2 800V高压纯电大车市场TOP10（2025年1-9月）</div>
+
+        <div class="two-column">
+            <div class="column">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>车企/车型</th>
+                            <th>销量<br>(万台)</th>
+                            <th>市场<br>份额</th>
+                            <th>价格带<br>(万元)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>极氪009</td>
+                            <td>1.8</td>
+                            <td>25.4%</td>
+                            <td>49.9-58.8</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td>2</td>
+                            <td>理想MEGA</td>
+                            <td>1.5</td>
+                            <td>21.1%</td>
+                            <td>55.98</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>小鹏X9</td>
+                            <td>0.95</td>
+                            <td>13.4%</td>
+                            <td>35.98-41.98</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>问界M9纯电</td>
+                            <td>0.87</td>
+                            <td>12.3%</td>
+                            <td>50.98-56.98</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td>5</td>
+                            <td>理想i8</td>
+                            <td>0.8</td>
+                            <td>11.3%</td>
+                            <td>33.98-43.98</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>极氪007</td>
+                            <td>0.72</td>
+                            <td>10.1%</td>
+                            <td>20.99-29.99</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>阿维塔12</td>
+                            <td>0.35</td>
+                            <td>4.9%</td>
+                            <td>30.08-40.08</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>智己LS6</td>
+                            <td>0.28</td>
+                            <td>3.9%</td>
+                            <td>22.99-29.19</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td>9</td>
+                            <td>理想i6</td>
+                            <td>0.04</td>
+                            <td>0.6%</td>
+                            <td>24.98-29.98</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>岚图追光</td>
+                            <td>0.03</td>
+                            <td>0.4%</td>
+                            <td>32.29-43.29</td>
+                        </tr>
+                        <tr style="background-color: #e8e8e8; font-weight: bold;">
+                            <td colspan="2">市场合计</td>
+                            <td>7.1</td>
+                            <td>100%</td>
+                            <td>均价约42万</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="column">
+                <div class="data-card">
+                    <div class="data-card-title">市场总容量</div>
+                    <ul class="bullet-list">
+                        <li>1-9月市场总销量: 7.1万台</li>
+                        <li>全年预测: 80-95万台</li>
+                        <li>市场总金额: 2,272亿元(1-9月)</li>
+                        <li><strong>理想汽车市场份额: 33.0%（3款车型）</strong></li>
+                    </ul>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-card-title">理想汽车市场地位</div>
+                    <ul class="bullet-list">
+                        <li>🥈 MEGA单车型市占率21.1%，第二名</li>
+                        <li>📈 i8(7月上市)月销快速爬坡</li>
+                        <li>📈 i6(9月上市)刚开始交付</li>
+                        <li>💎 MEGA 55.98万是800V纯电大车中最贵单品之一</li>
+                    </ul>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-card-title">关键器件年需求量(按85万台计)</div>
+                    <ul class="bullet-list">
+                        <li>SiC功率模块(1200V): 2,040-3,880万颗</li>
+                        <li>SiC MOSFET(OBC/DC-DC): 1,020-1,445万颗</li>
+                        <li>车规级MCU: 3,825-5,890万颗</li>
+                        <li>车规级LED: 4.25-4.76亿颗</li>
+                    </ul>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-card-title">对比亚迪半导体的战略意义</div>
+                    <ul class="bullet-list">
+                        <li>纯电车型是<strong>SiC功率器件核心应用场景</strong></li>
+                        <li>理想2025年纯电销量约2.34万台，2026年目标10-12万台</li>
+                        <li>理想与三安合资的斯科半导体SiC产能有限，<strong>外采需求长期存在</strong></li>
+                        <li>i8/i6是理想战略转型关键，提前布局可享高成长红利</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">数据来源: 理想汽车官方、懂车帝、易车网 (2025年1-9月) | 仅供内部销售策略使用</div>
+</div>
+
+<!-- 第4页：产品采购额总览 -->
+<div class="page content-page">
+    <div class="page-header">二、客户和比亚迪半导体产品采购额分析（细分到产品线和规格）</div>
+    <div class="page-content">
+        <div class="section-title">2.1 理想汽车半导体采购总盘子(2025年，基于30-35万台销量)</div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>器件<br>类型</th>
+                    <th>增程式<br>采购量级<br>(27万台)</th>
+                    <th>纯电<br>采购量级<br>(3万台)</th>
+                    <th>单车<br>价值量<br>(元)</th>
+                    <th>年度<br>采购额<br>(亿元)</th>
+                    <th>主要供应商</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="6" style="background-color: #fff3cd; font-weight: bold;">功率半导体 - 合计约45-55亿元</td>
+                </tr>
+                <tr class="highlight">
+                    <td>IGBT模块</td>
+                    <td>94.5-108万个</td>
+                    <td>-</td>
+                    <td>3,500-4,000</td>
+                    <td><strong>33-40</strong></td>
+                    <td>时代电气(主力50-60%)、英飞凌、意法</td>
+                </tr>
+                <tr class="highlight">
+                    <td>SiC模块<br>/MOSFET</td>
+                    <td>-</td>
+                    <td>15-18万个</td>
+                    <td>12,000-15,000</td>
+                    <td><strong>3.6-5.4</strong></td>
+                    <td>理想自产(斯科50-70%)、意法(20-30%)、芯联集成</td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="background-color: #d4edda; font-weight: bold;">控制芯片 - 合计约20-28亿元</td>
+                </tr>
+                <tr>
+                    <td>车规MCU</td>
+                    <td>945-1,215万颗</td>
+                    <td>105-135万颗</td>
+                    <td>30-50</td>
+                    <td><strong>16-22</strong></td>
+                    <td>英飞凌、瑞萨、NXP</td>
+                </tr>
+                <tr>
+                    <td>智驾SoC</td>
+                    <td>18-27万颗</td>
+                    <td>2-3万颗</td>
+                    <td>15,000-20,000</td>
+                    <td><strong>3-6</strong></td>
+                    <td>NVIDIA、地平线</td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="background-color: #e8f4f8; font-weight: bold;">传感器 - 合计约5-9亿元</td>
+                </tr>
+                <tr>
+                    <td>CMOS<br>传感器</td>
+                    <td>378-432万颗</td>
+                    <td>42-48万颗</td>
+                    <td>100-180</td>
+                    <td><strong>4.2-8.6</strong></td>
+                    <td>豪威、安森美、索尼</td>
+                </tr>
+                <tr>
+                    <td>电流<br>传感器</td>
+                    <td>94.5-108万颗</td>
+                    <td>10.5-12万颗</td>
+                    <td>80-100</td>
+                    <td><strong>0.8-1.2</strong></td>
+                    <td>博世、LEM、麦格米特</td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="background-color: #fff0f5; font-weight: bold;">照明 - 合计约0.6-1.5亿元</td>
+                </tr>
+                <tr>
+                    <td>LED芯片</td>
+                    <td>297-378亿颗</td>
+                    <td>33-42亿颗</td>
+                    <td>0.02-0.05</td>
+                    <td><strong>0.6-1.5</strong></td>
+                    <td>星宇(60-70%)、华域视觉(20-30%)→国星/三安/欧司朗</td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: right; font-weight: bold; background-color: #f0f0f0;">合计采购盘子</td>
+                    <td style="font-weight: bold; font-size: 12px; background-color: #f0f0f0;"><strong>61-82</strong></td>
+                    <td style="background-color: #f0f0f0;"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-title">2.2 比亚迪半导体可切入产品线优先级</div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>优先级</th>
+                    <th>产品线</th>
+                    <th>理想<br>采购额</th>
+                    <th>比亚迪<br>成熟度</th>
+                    <th>切入<br>难度</th>
+                    <th>2026目标</th>
+                    <th>2027-28目标</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="highlight">
+                    <td><strong>P0</strong></td>
+                    <td><strong>IGBT模块</strong></td>
+                    <td>33-40亿</td>
+                    <td>⭐⭐⭐⭐⭐</td>
+                    <td>⭐⭐⭐</td>
+                    <td>3-5亿元</td>
+                    <td>8-12亿元</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>P1</strong></td>
+                    <td><strong>SiC模块</strong></td>
+                    <td>3.6-5.4亿</td>
+                    <td>⭐⭐⭐⭐</td>
+                    <td>⭐⭐⭐⭐</td>
+                    <td>0.2-0.4亿元</td>
+                    <td>1-2亿元</td>
+                </tr>
+                <tr>
+                    <td>P2</td>
+                    <td>车规MCU</td>
+                    <td>16-22亿</td>
+                    <td>⚠️ 待确认</td>
+                    <td>⭐⭐⭐⭐⭐</td>
+                    <td>❌ 不切入</td>
+                    <td>0.1-0.3亿元</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <ul class="bullet-list" style="margin-top: 8px;">
+            <li><strong>战略聚焦</strong>: IGBT(33-40亿) + SiC(3.6-5.4亿) = 合计36.6-45.4亿元市场，占总盘子60-70%</li>
+            <li><strong>2026-2028三年销售额目标</strong>: 3.2-5.4亿 → 9-14亿 → 15-20亿元</li>
+            <li><strong>说明</strong>: 采购额基于理想2025年30-35万台销量，2026年预计增长至40-45万台</li>
+        </ul>
+    </div>
+    <div class="page-footer">测算口径: 基于单车BOM×销量，内部估算 | 仅供内部销售策略参考</div>
+</div>
+
+<!-- 第5页：IGBT详细分析 -->
+<div class="page content-page">
+    <div class="page-header">二、产品采购额分析（续）- IGBT模块产品线</div>
+    <div class="page-content">
+        <div class="section-title">2.3 IGBT模块应用场景与供应商格局</div>
+
+        <div class="two-column">
+            <div class="column">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>应用<br>位置</th>
+                            <th>电压/<br>电流</th>
+                            <th>数量<br>/车</th>
+                            <th>单价<br>(元)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>增程器<br>发电机</td>
+                            <td>750V/<br>150A</td>
+                            <td>1</td>
+                            <td>800-1,000</td>
+                        </tr>
+                        <tr>
+                            <td>前电机<br>驱动器</td>
+                            <td>750V/<br>450A</td>
+                            <td>1</td>
+                            <td>2,000-2,500</td>
+                        </tr>
+                        <tr>
+                            <td>后电机<br>驱动器</td>
+                            <td>750V/<br>450A</td>
+                            <td>1</td>
+                            <td>2,000-2,500</td>
+                        </tr>
+                        <tr>
+                            <td>OBC/<br>DC-DC</td>
+                            <td>750V/<br>50A</td>
+                            <td>0.5</td>
+                            <td>500-800</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td colspan="3"><strong>单车价值量</strong></td>
+                            <td><strong>5,300-<br>6,800元</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="data-table" style="margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th colspan="2">采购额测算(2025年)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>增程式销量</td>
+                            <td>27万台</td>
+                        </tr>
+                        <tr>
+                            <td>单车IGBT价值量</td>
+                            <td>6,000元(中值)</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td><strong>年度采购额</strong></td>
+                            <td><strong>16.2亿元</strong></td>
+                        </tr>
+                        <tr>
+                            <td>2026年预测(35万台)</td>
+                            <td>21亿元</td>
+                        </tr>
+                        <tr>
+                            <td>2027年预测(40万台)</td>
+                            <td>24亿元</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="data-card" style="margin-top: 8px;">
+                    <div class="data-card-title">供应商格局(Tier1)</div>
+                    <ul class="bullet-list">
+                        <li>常州汇想(理想87.34%持股): 50-60%</li>
+                        <li>中车时代电气: 20-30%</li>
+                        <li>汇川技术: 10-20%</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="column">
+                <div class="data-card">
+                    <div class="data-card-title">供应商格局(Tier2-IGBT芯片)</div>
+                    <ul class="bullet-list">
+                        <li>英飞凌: 60-70%(通过汇川/时代供货)</li>
+                        <li>中车时代自产: 20-25%</li>
+                        <li>比亚迪半导体: <strong>0-5%?(待确认)</strong></li>
+                        <li>斯达半导: 5-10%?</li>
+                    </ul>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-card-title">比亚迪IGBT产品对标</div>
+                    <ul class="bullet-list">
+                        <li><strong>BYD IGBT 5.0</strong>: 750V/1200V</li>
+                        <li>额定电流: 300-600A</li>
+                        <li>封装: 半桥/六管模块</li>
+                        <li>车规认证: AEC-Q101 ✅</li>
+                        <li>应用: 增程器+主驱 ✅ <strong>完全匹配</strong></li>
+                        <li><strong>vs英飞凌</strong>: 性能对标，价格低15-20%</li>
+                        <li>✅ 已在比亚迪/长安等车型量产验证</li>
+                    </ul>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-card-title">切入策略</div>
+                    <ul class="bullet-list">
+                        <li><strong>策略A-通过汇川间接切入</strong>:</li>
+                        <li>汇川是理想第一大供应商(年采购40亿+)</li>
+                        <li>提升在汇川份额→间接提升在理想份额</li>
+                        <li>短期目标: 2026年通过汇川供货5-10%</li>
+                        <li><strong>策略B-直接切入(第二供应商)</strong>:</li>
+                        <li>目标车型: L6(年销18万台，走量车型)</li>
+                        <li>目标份额: 10%(第二供应商地位)</li>
+                        <li>价格策略: 对标英飞凌，低10-15%</li>
+                        <li>2026年Q1送样→Q2定点→Q3量产</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">数据来源: 行业经验估算+供应商公告 | 仅供内部销售策略使用</div>
+</div>
+
+<!-- 第6页：SiC详细分析 -->
+<div class="page content-page">
+    <div class="page-header">二、产品采购额分析（续）- SiC功率模块产品线</div>
+    <div class="page-content">
+        <div class="section-title">2.4 SiC功率模块应用场景与供应商格局</div>
+
+        <div class="two-column">
+            <div class="column">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>应用<br>位置</th>
+                            <th>电压/<br>电流</th>
+                            <th>数量<br>/车</th>
+                            <th>单价<br>(元)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>后电机<br>驱动器</td>
+                            <td>1200V/<br>400A</td>
+                            <td>1</td>
+                            <td>5,000-6,000</td>
+                        </tr>
+                        <tr>
+                            <td>前电机<br>(四驱版)</td>
+                            <td>1200V/<br>400A</td>
+                            <td>0.6</td>
+                            <td>5,000-6,000</td>
+                        </tr>
+                        <tr>
+                            <td>OBC<br>充电</td>
+                            <td>1200V/<br>50A</td>
+                            <td>2.5</td>
+                            <td>800-1,000</td>
+                        </tr>
+                        <tr>
+                            <td>DC-DC<br>变换</td>
+                            <td>1200V/<br>30A</td>
+                            <td>1.5</td>
+                            <td>500-700</td>
+                        </tr>
+                        <tr>
+                            <td>空调<br>压缩机</td>
+                            <td>1200V/<br>100A</td>
+                            <td>1</td>
+                            <td>1,500-2,000</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td colspan="3"><strong>单车价值量</strong></td>
+                            <td><strong>12,000-<br>15,000元</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="data-table" style="margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th>年份</th>
+                            <th>纯电<br>销量</th>
+                            <th>采购额<br>(亿元)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight">
+                            <td>2025</td>
+                            <td>2.3万台</td>
+                            <td><strong>3.1</strong></td>
+                        </tr>
+                        <tr>
+                            <td>2026</td>
+                            <td>10万台</td>
+                            <td>13.5</td>
+                        </tr>
+                        <tr>
+                            <td>2027</td>
+                            <td>18万台</td>
+                            <td>23.4</td>
+                        </tr>
+                        <tr>
+                            <td>2028</td>
+                            <td>25万台</td>
+                            <td>31.25</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="column">
+                <div class="data-card">
+                    <div class="data-card-title">供应商格局</div>
+                    <ul class="bullet-list">
+                        <li><strong>Tier1电驱总成</strong>:</li>
+                        <li>斯科半导体(理想+三安合资): 10-20%</li>
+                        <li>汇川技术: 40-50%</li>
+                        <li>博世/大陆: 20-30%</li>
+                        <li><strong>Tier2 SiC芯片/模块</strong>:</li>
+                        <li>意法半导体(ST): 30-40%</li>
+                        <li>安森美(onsemi): 20-30%</li>
+                        <li>三安(斯科): 10-20%</li>
+                        <li>英飞凌: 10-20%</li>
+                        <li>比亚迪: <strong>0%?(未确认)</strong></li>
+                    </ul>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-card-title">关键发现</div>
+                    <ul class="bullet-list">
+                        <li>✅ 意法是主力(2023.12签长期协议)</li>
+                        <li>⚠️ 斯科产能有限: 年产240万只，仅满足6-10万辆</li>
+                        <li>✅ 理想2026年纯电目标10-12万→<strong>外采需求长期存在</strong></li>
+                        <li>✅ 国产替代窗口: 理想需多供应商保障</li>
+                    </ul>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-card-title">比亚迪SiC对标</div>
+                    <ul class="bullet-list">
+                        <li><strong>BYD SiC MOSFET/模块</strong>: 1200V</li>
+                        <li>额定电流: 50-400A</li>
+                        <li>封装: TO-247/半桥/全桥</li>
+                        <li>vs意法: 导通电阻高20%，开关损耗高12%</li>
+                        <li><strong>核心优势</strong>: 价格低20-30%</li>
+                        <li>✅ 在比亚迪汉/唐量产50万台，可靠性验证</li>
+                    </ul>
+                </div>
+
+                <div class="data-card">
+                    <div class="data-card-title">切入策略</div>
+                    <ul class="bullet-list">
+                        <li><strong>2026年-从OBC/DC-DC切入</strong>:</li>
+                        <li>低功率应用，对性能要求相对较低</li>
+                        <li>目标: i8 OBC，份额20%</li>
+                        <li>年销售额: 0.2-0.4亿元(切入点)</li>
+                        <li><strong>2027年-主驱SiC突破</strong>:</li>
+                        <li>目标车型: i6或新纯电SUV</li>
+                        <li>目标份额: 10-15%(第二供应商)</li>
+                        <li>年销售额: 1-2亿元</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">数据来源: 行业经验估算+供应商公告 | 仅供内部销售策略使用</div>
+</div>
+
+<!-- 第7页：可推广销售额总览 -->
+<div class="page content-page">
+    <div class="page-header">三、按照产品类型，分析比亚迪半导体可推广销售额</div>
+    <div class="page-content">
+        <div class="section-title">3.1 产品线销售机会评分与优先级</div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>产品线</th>
+                    <th>市场<br>规模<br>(30分)</th>
+                    <th>产品<br>成熟度<br>(25分)</th>
+                    <th>切入<br>难度<br>(20分)</th>
+                    <th>利润率<br>(15分)</th>
+                    <th>战略<br>价值<br>(10分)</th>
+                    <th>综合<br>得分</th>
+                    <th>优先级</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="highlight">
+                    <td><strong>IGBT模块</strong></td>
+                    <td>30<br>(33-40亿)</td>
+                    <td>25<br>已量产</td>
+                    <td>15<br>中等</td>
+                    <td>10<br>30%</td>
+                    <td>10<br>核心</td>
+                    <td><strong>90</strong></td>
+                    <td><strong>P0</strong></td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>SiC模块</strong></td>
+                    <td>15<br>(3.6-5.4亿)</td>
+                    <td>20<br>已量产</td>
+                    <td>10<br>较高</td>
+                    <td>12<br>35%</td>
+                    <td>10<br>核心</td>
+                    <td><strong>67</strong></td>
+                    <td><strong>P1</strong></td>
+                </tr>
+                <tr>
+                    <td>车规MCU</td>
+                    <td>20<br>(16-22亿)</td>
+                    <td>10<br>待确认</td>
+                    <td>5<br>极高</td>
+                    <td>10<br>30%</td>
+                    <td>7<br>重要</td>
+                    <td>52</td>
+                    <td>P2</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-title">3.2 三年滚动销售目标（2026-2028年）</div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>年份</th>
+                    <th>理想<br>预计销量</th>
+                    <th>IGBT<br>(P0)</th>
+                    <th>SiC<br>(P1)</th>
+                    <th>MCU<br>(P2)</th>
+                    <th><strong>合计</strong></th>
+                    <th>同比<br>增长</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2025基准</td>
+                    <td>30-35万台</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td><strong>0</strong></td>
+                    <td>-</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>2026</strong></td>
+                    <td>40-45万台</td>
+                    <td>3.0-5.0亿</td>
+                    <td>0.2-0.4亿</td>
+                    <td>0</td>
+                    <td><strong>3.2-5.4亿</strong></td>
+                    <td>-</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>2027</strong></td>
+                    <td>50-55万台</td>
+                    <td>7-12亿</td>
+                    <td>2-3亿</td>
+                    <td>0</td>
+                    <td><strong>9-15亿</strong></td>
+                    <td>+181-178%</td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>2028</strong></td>
+                    <td>60-65万台</td>
+                    <td>10-16亿</td>
+                    <td>5-8亿</td>
+                    <td>0.1-0.3亿</td>
+                    <td><strong>15.1-24.3亿</strong></td>
+                    <td>+68-62%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="two-column" style="margin-top: 8px;">
+            <div class="column">
+                <div class="data-card">
+                    <div class="data-card-title">战略结论</div>
+                    <ul class="bullet-list">
+                        <li>✅ 聚焦IGBT+SiC双主线</li>
+                        <li>✅ 短期突破IGBT: 2026年3-5亿</li>
+                        <li>✅ 中期发力SiC: 2027-2028年2-8亿</li>
+                        <li>⚠️ MCU长期布局: 2028年后切入</li>
+                        <li><strong>三年累计: 27.3-44.7亿元</strong></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="column">
+                <div class="data-card">
+                    <div class="data-card-title">关键成功因素</div>
+                    <ul class="bullet-list">
+                        <li>⭐⭐⭐⭐⭐ 产品性能对标国际水平</li>
+                        <li>⭐⭐⭐⭐⭐ 价格竞争力(低10-25%)</li>
+                        <li>⭐⭐⭐⭐⭐ 供应稳定性(产能保障)</li>
+                        <li>⭐⭐⭐⭐ 本地化FAE支持</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">仅供内部销售策略使用，严禁外传</div>
+</div>
+
+<!-- 第8页：IGBT行动计划 -->
+<div class="page content-page">
+    <div class="page-header">三、可推广销售额分析（续）- IGBT行动计划</div>
+    <div class="page-content">
+        <div class="section-title">3.3 IGBT产品线行动计划</div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 12%;">阶段</th>
+                    <th style="width: 30%;">关键任务</th>
+                    <th style="width: 12%;">负责人</th>
+                    <th style="width: 12%;">截止日期</th>
+                    <th style="width: 34%;">成功标准</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="3"><strong>阶段一<br>技术验证<br>(2025 Q4-<br>2026 Q1)</strong></td>
+                    <td>完成L6 IGBT规格对接</td>
+                    <td>FAE<br>李工</td>
+                    <td>2025-11-30</td>
+                    <td>确认750V/450A六管模块规格</td>
+                </tr>
+                <tr>
+                    <td>制备样品并送样测试</td>
+                    <td>生产部<br>王经理</td>
+                    <td>2025-12-15</td>
+                    <td>提供10套IGBT模块</td>
+                </tr>
+                <tr>
+                    <td>配合台架+路试</td>
+                    <td>FAE<br>李工</td>
+                    <td>2026-03-31</td>
+                    <td>通过测试，累计路试5,000公里</td>
+                </tr>
+                <tr>
+                    <td rowspan="3"><strong>阶段二<br>商务谈判<br>(2026 Q1-Q2)</strong></td>
+                    <td>建立商务接触</td>
+                    <td>销售<br>张总</td>
+                    <td>2026-01-15</td>
+                    <td>完成理想采购部门拜访</td>
+                </tr>
+                <tr>
+                    <td>提交报价方案</td>
+                    <td>销售<br>张总</td>
+                    <td>2026-02-28</td>
+                    <td>价格低于英飞凌10-12%</td>
+                </tr>
+                <tr>
+                    <td>争取定点通知书</td>
+                    <td>销售<br>张总</td>
+                    <td>2026-05-31</td>
+                    <td>获得L6车型IGBT定点</td>
+                </tr>
+                <tr>
+                    <td rowspan="3"><strong>阶段三<br>量产爬坡<br>(2026 Q2-Q4)</strong></td>
+                    <td>完成PPAP认证</td>
+                    <td>质量部<br>周经理</td>
+                    <td>2026-06-30</td>
+                    <td>通过PPAP，获量产批准</td>
+                </tr>
+                <tr>
+                    <td>Q2-Q3量产爬坡</td>
+                    <td>生产部<br>王经理</td>
+                    <td>2026-09-30</td>
+                    <td>月供货8-12万个</td>
+                </tr>
+                <tr>
+                    <td>Q4稳定供货</td>
+                    <td>生产部<br>王经理</td>
+                    <td>2026-12-31</td>
+                    <td>月供货12-18万个,PPM≤100</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-title">3.4 SiC产品线行动计划</div>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 12%;">阶段</th>
+                    <th style="width: 30%;">关键任务</th>
+                    <th style="width: 12%;">负责人</th>
+                    <th style="width: 12%;">截止日期</th>
+                    <th style="width: 34%;">成功标准</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="3"><strong>阶段一<br>OBC切入<br>(2026全年)</strong></td>
+                    <td>i8 OBC规格对接</td>
+                    <td>FAE<br>刘工</td>
+                    <td>2026-01-31</td>
+                    <td>确认1200V/50A SiC MOSFET规格</td>
+                </tr>
+                <tr>
+                    <td>送样测试</td>
+                    <td>FAE<br>刘工</td>
+                    <td>2026-03-31</td>
+                    <td>通过热循环/EMC测试</td>
+                </tr>
+                <tr>
+                    <td>小批量定点+供货</td>
+                    <td>销售<br>张总</td>
+                    <td>2026-12-31</td>
+                    <td>获i8 OBC定点,年供货4-8万颗</td>
+                </tr>
+                <tr>
+                    <td rowspan="3"><strong>阶段二<br>主驱突破<br>(2027全年)</strong></td>
+                    <td>主驱SiC技术对接</td>
+                    <td>研发部<br>赵总工</td>
+                    <td>2027-01-31</td>
+                    <td>完成1200V/400A模块设计</td>
+                </tr>
+                <tr>
+                    <td>送样+路试</td>
+                    <td>FAE<br>刘工</td>
+                    <td>2027-05-31</td>
+                    <td>路试1万公里,效率≥98.5%</td>
+                </tr>
+                <tr>
+                    <td>获主驱定点+量产</td>
+                    <td>销售<br>张总</td>
+                    <td>2027-12-31</td>
+                    <td>i6主驱定点,份额15%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <ul class="bullet-list" style="margin-top: 8px;">
+            <li><strong>2026年关键输出</strong>: IGBT累计供货20-30万个，销售额3-5亿；SiC切入OBC，销售额0.2-0.4亿</li>
+            <li><strong>团队配置</strong>: 销售总监+IGBT销售经理+SiC销售经理+2名IGBT FAE+2名SiC FAE(常驻理想常州)</li>
+        </ul>
+    </div>
+    <div class="page-footer">仅供内部销售策略使用，严禁外传</div>
+</div>
+
+<!-- 第9页：立即行动与风险管理 -->
+<div class="page content-page">
+    <div class="page-header">四、立即行动计划与风险管理</div>
+    <div class="page-content" style="padding: 12px 40px 35px;">
+        <div class="section-title" style="margin: 8px 0 6px 0;">4.1 立即行动清单（2025年Q4）</div>
+
+        <table class="data-table" style="margin: 6px 0; font-size: 9px;">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>行动项</th>
+                    <th>负责人</th>
+                    <th>截止日期</th>
+                    <th>优先级</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="highlight">
+                    <td>1</td>
+                    <td>与理想汽车采购部建立联系</td>
+                    <td>销售总监张总</td>
+                    <td>2025-11-15</td>
+                    <td>🔴 紧急</td>
+                </tr>
+                <tr class="highlight">
+                    <td>2</td>
+                    <td>完成L6 IGBT规格对接</td>
+                    <td>FAE团队李工</td>
+                    <td>2025-11-30</td>
+                    <td>🔴 紧急</td>
+                </tr>
+                <tr class="highlight">
+                    <td>3</td>
+                    <td>制备工程样品并送样</td>
+                    <td>生产部王经理</td>
+                    <td>2025-12-15</td>
+                    <td>🔴 紧急</td>
+                </tr>
+                <tr class="highlight">
+                    <td>4</td>
+                    <td>提交正式报价方案</td>
+                    <td>销售总监张总</td>
+                    <td>2025-12-31</td>
+                    <td>🔴 紧急</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>组建理想专项销售团队</td>
+                    <td>销售VP</td>
+                    <td>2025-11-30</td>
+                    <td>🟠 重要</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>确认IGBT产能扩产计划</td>
+                    <td>生产部+供应链</td>
+                    <td>2025-11-30</td>
+                    <td>🟠 重要</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>与汇川技术深化合作</td>
+                    <td>销售总监张总</td>
+                    <td>2025-12-31</td>
+                    <td>🟠 重要</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>制定SiC技术提升路线图</td>
+                    <td>研发部赵总工</td>
+                    <td>2026-01-31</td>
+                    <td>🟡 正常</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-title" style="margin: 8px 0 6px 0;">4.2 TOP5关键风险与应对策略</div>
+
+        <table class="data-table" style="margin: 6px 0; font-size: 9px;">
+            <thead>
+                <tr>
+                    <th style="width: 8%;">风险<br>等级</th>
+                    <th style="width: 22%;">风险描述</th>
+                    <th style="width: 10%;">概率×<br>影响</th>
+                    <th style="width: 50%;">应对策略</th>
+                    <th style="width: 10%;">责任人</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="highlight">
+                    <td>🔴<br>极高</td>
+                    <td><strong>产能不足导致断供</strong></td>
+                    <td>中×<br>极高</td>
+                    <td>• 2026年扩产至100万个IGBT/月<br>• 建立外协封装网络<br>• 与理想签订"产能锁定"条款</td>
+                    <td>生产部+<br>供应链</td>
+                </tr>
+                <tr class="highlight">
+                    <td>🔴<br>极高</td>
+                    <td><strong>SiC性能不达标被拒绝</strong></td>
+                    <td>中×高</td>
+                    <td>• 加大研发投入,缩小与意法差距至<10%<br>• 提供"性能版"SiC备选<br>• 从OBC低功率切入积累信任</td>
+                    <td>研发部+<br>FAE</td>
+                </tr>
+                <tr>
+                    <td>🟠<br>高</td>
+                    <td><strong>英飞凌价格战反击</strong></td>
+                    <td>高×中</td>
+                    <td>• 不跟进非理性降价<br>• 强调差异化(本地支持+供应稳定)<br>• 设定底线毛利率22%</td>
+                    <td>销售<br>总监</td>
+                </tr>
+                <tr>
+                    <td>🟠<br>高</td>
+                    <td><strong>理想销量不达预期</strong></td>
+                    <td>低×高</td>
+                    <td>• 签订"保底+浮动"供货协议<br>• 避免过度备货<br>• 分散风险至其他车企</td>
+                    <td>销售<br>总监</td>
+                </tr>
+                <tr>
+                    <td>🟡<br>中</td>
+                    <td><strong>理想延长账期至120天</strong></td>
+                    <td>中×中</td>
+                    <td>• 争取60-90天账期<br>• 必要时接受但要求提价2-3%<br>• 加强应收账款管理</td>
+                    <td>商务+<br>财务</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="section-title" style="margin: 8px 0 6px 0;">4.3 2026年KPI考核表</div>
+
+        <table class="data-table" style="margin: 6px 0; font-size: 9px;">
+            <thead>
+                <tr>
+                    <th>KPI指标</th>
+                    <th>目标值</th>
+                    <th>权重</th>
+                    <th>考核标准</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="highlight">
+                    <td>销售额</td>
+                    <td>3.2-5.4亿元</td>
+                    <td>40%</td>
+                    <td>达成3.2亿=及格,达成4亿=良好,达成5.4亿=优秀</td>
+                </tr>
+                <tr class="highlight">
+                    <td>毛利率</td>
+                    <td>≥28%</td>
+                    <td>20%</td>
+                    <td><25%=不合格,25-28%=及格,≥28%=优秀</td>
+                </tr>
+                <tr>
+                    <td>客户满意度</td>
+                    <td>≥85分</td>
+                    <td>15%</td>
+                    <td>理想汽车季度评分</td>
+                </tr>
+                <tr>
+                    <td>份额提升</td>
+                    <td>IGBT 12-15%</td>
+                    <td>15%</td>
+                    <td><10%=不合格,10-12%=及格,≥12%=优秀</td>
+                </tr>
+                <tr class="highlight">
+                    <td>重大质量事故</td>
+                    <td>0次</td>
+                    <td>10%</td>
+                    <td>发生1次重大事故(召回)=一票否决</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="page-footer">仅供内部销售策略使用，严禁外传</div>
+</div>
+
+<!-- 最后页 -->
+<div class="page thankyou-page">
+    <div class="thankyou-top">
+        <div class="thankyou-text">THANK YOU!</div>
+    </div>
+    <div class="thankyou-bottom">
+        <div class="cover-logo"></div>
+        <div class="cover-slogan">BUILD YOUR DREAMS</div>
+    </div>
+</div>
+
+<script>
+// 月度销量柱状图
+const ctx1 = document.getElementById('monthlySalesChart');
+if (ctx1) {
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月'],
+            datasets: [{
+                label: '出货数量(台)',
+                data: [29927, 26264, 36674, 33939, 40856, 36279, 30731, 28529, 33951],
+                backgroundColor: '#4472C4',
+                borderColor: '#4472C4',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 10
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: 9
+                        },
+                        callback: function(value) {
+                            return value.toLocaleString();
+                        }
+                    }
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            size: 9
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+</script>
+
+</body>
+</html>

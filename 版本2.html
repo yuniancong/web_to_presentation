@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>理想汽车关键零部件供应链分析报告</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --color-primary-red: #e60012;
+            --color-primary-red-dark: #c50010;
+            --text-color-on-dark: #ffffff;
+            --text-color-body: #000000;
+            --text-color-light: #666666;
+            --text-color-highlight-green: #008000;
+            --text-color-highlight-red: #e60012;
+            --bg-page: #ffffff;
+            --bg-table-stripe: #f2f2f2;
+            --bg-table-total: #f9f9f9;
+            --border-color-table: #ddd;
+            --shadow-page: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", "SimHei", sans-serif;
+            background-color: #e5e5e5;
+            padding: 20px;
+        }
+
+        .page {
+            width: 297mm;
+            min-height: 210mm;
+            margin: 0 auto 20px;
+            background-color: var(--bg-page);
+            box-shadow: 0 0 10px var(--shadow-page);
+            position: relative;
+            page-break-after: always;
+        }
+
+        /* 封面页样式 */
+        .cover-page {
+            height: 210mm;
+            overflow: hidden;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+        }
+
+        .cover-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--color-primary-red);
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .cover-subtitle {
+            font-size: 24px;
+            color: var(--text-color-light);
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .cover-info {
+            font-size: 16px;
+            color: var(--text-color-body);
+            text-align: center;
+            line-height: 2;
+        }
+
+        .cover-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background-color: var(--color-primary-red);
+            z-index: -1;
+        }
+
+        /* 内容页样式 */
+        .content-page {
+            padding: 20px 40px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--text-color-on-dark);
+            background: linear-gradient(45deg, var(--color-primary-red), var(--color-primary-red-dark));
+            padding: 15px 30px;
+            margin: -20px -40px 20px -40px;
+            clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 100%, 0 100%);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--color-primary-red);
+            margin: 30px 0 15px 0;
+            border-left: 4px solid var(--color-primary-red);
+            padding-left: 15px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+
+        .data-table th {
+            background-color: var(--color-primary-red);
+            color: var(--text-color-on-dark);
+            font-weight: normal;
+            font-size: 14px;
+            padding: 10px 8px;
+            border: 1px solid var(--border-color-table);
+            text-align: center;
+        }
+
+        .data-table td {
+            padding: 8px;
+            border: 1px solid var(--border-color-table);
+            text-align: center;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: var(--bg-table-stripe);
+        }
+
+        .data-table tr:nth-child(odd) {
+            background-color: var(--bg-page);
+        }
+
+        .data-table .total-row {
+            background-color: var(--bg-table-total);
+            font-weight: bold;
+        }
+
+        .data-source {
+            font-size: 12px;
+            text-align: right;
+            color: var(--text-color-light);
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .chart-container {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #fafafa;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 350px;
+            margin: 0 auto;
+        }
+
+        .chart-wrapper.small {
+            height: 280px;
+        }
+
+        .chart-wrapper.pie {
+            height: 320px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .charts-row {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .charts-row .chart-container {
+            flex: 1;
+        }
+
+        .highlight-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .info-card {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .info-card-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--color-primary-red);
+            margin-bottom: 10px;
+        }
+
+        .info-card-content {
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--text-color-body);
+        }
+
+        .bullet-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .bullet-list li {
+            padding: 8px 0 8px 25px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .bullet-list li:before {
+            content: "●";
+            color: var(--color-primary-red);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .data-unavailable {
+            color: #dc3545;
+            font-style: italic;
+        }
+
+        .data-available {
+            color: var(--text-color-highlight-green);
+            font-weight: bold;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            .page {
+                margin: 0;
+                box-shadow: none;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 封面页 -->
+<div class="page cover-page">
+    <div class="cover-title">理想汽车关键零部件<br>供应链分析报告</div>
+    <div class="cover-subtitle">2025年4月-9月销售数据与关键部件分析</div>
+    <div class="cover-info">
+        <p>报告日期：2025年10月28日</p>
+        <p>数据时效：2025年4月-9月</p>
+        <p>数据来源：理想汽车官方、CPCA、权威行业报告</p>
+    </div>
+    <div class="cover-bottom"></div>
+</div>
+
+<!-- 第1页：销售情况总览 -->
+<div class="page content-page">
+    <div class="page-title">一、理想汽车销售情况总览</div>
+
+    <div class="section-title">1.1 月度总交付量（2025年4月-9月）</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>月份</th>
+                <th>总交付量（辆）</th>
+                <th>环比增长</th>
+                <th>数据来源</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2025-04</td>
+                <td>33,939</td>
+                <td>-</td>
+                <td>理想汽车官方</td>
+            </tr>
+            <tr>
+                <td>2025-05</td>
+                <td>40,856</td>
+                <td>+20.4%</td>
+                <td>理想汽车官方</td>
+            </tr>
+            <tr>
+                <td>2025-06</td>
+                <td>36,279</td>
+                <td>-11.2%</td>
+                <td>理想汽车官方</td>
+            </tr>
+            <tr>
+                <td>2025-07</td>
+                <td>30,731</td>
+                <td>-15.3%</td>
+                <td>理想汽车官方</td>
+            </tr>
+            <tr>
+                <td>2025-08</td>
+                <td>28,529</td>
+                <td>-7.2%</td>
+                <td>理想汽车官方</td>
+            </tr>
+            <tr>
+                <td>2025-09</td>
+                <td>33,951</td>
+                <td>+19.0%</td>
+                <td>理想汽车官方</td>
+            </tr>
+            <tr class="total-row">
+                <td>累计</td>
+                <td>204,285</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="data-source">数据来源：理想汽车官方公告，2025年5月-10月</div>
+
+    <div class="section-title">1.2 月度销售趋势分析（折线图）</div>
+    <div class="chart-container">
+        <div class="chart-wrapper">
+            <canvas id="monthlySalesChart"></canvas>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <strong>关键发现：</strong>
+        <ul class="bullet-list">
+            <li>半年累计交付204,285辆，月均交付34,048辆</li>
+            <li>5月达到峰值40,856辆，8月降至最低28,529辆</li>
+            <li>9月出现强势反弹，环比增长19.0%</li>
+        </ul>
+    </div>
+</div>
+
+<!-- 第2页：分车型销量分析 -->
+<div class="page content-page">
+    <div class="page-title">二、分车型销量结构分析</div>
+
+    <div class="section-title">2.1 6个月累计销量统计</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>车型名称</th>
+                <th>累计销量（辆）</th>
+                <th>平均月销（辆）</th>
+                <th>市场占比</th>
+                <th>动力类型</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>理想L6</td>
+                <td>90,379</td>
+                <td>15,063</td>
+                <td>44.23%</td>
+                <td>增程式</td>
+            </tr>
+            <tr>
+                <td>理想L7</td>
+                <td>44,015</td>
+                <td>7,336</td>
+                <td>21.55%</td>
+                <td>增程式</td>
+            </tr>
+            <tr>
+                <td>理想L9</td>
+                <td>25,953</td>
+                <td>4,326</td>
+                <td>12.70%</td>
+                <td>增程式</td>
+            </tr>
+            <tr>
+                <td>理想L8</td>
+                <td>22,991</td>
+                <td>3,832</td>
+                <td>11.26%</td>
+                <td>增程式</td>
+            </tr>
+            <tr>
+                <td>理想MEGA</td>
+                <td>14,615</td>
+                <td>2,436</td>
+                <td>7.15%</td>
+                <td>纯电</td>
+            </tr>
+            <tr>
+                <td>理想i8</td>
+                <td>7,928</td>
+                <td>3,964*</td>
+                <td>3.88%</td>
+                <td>纯电</td>
+            </tr>
+            <tr>
+                <td>理想i6</td>
+                <td>404</td>
+                <td>404*</td>
+                <td>0.20%</td>
+                <td>纯电</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="data-source">数据来源：CPCA/CnEVPost，2025年5月-10月；*注：i8仅8-9月有数据，i6仅9月有数据</div>
+
+    <div class="section-title">2.2 车型销量可视化分析</div>
+    <div class="charts-row">
+        <div class="chart-container">
+            <h4 style="text-align: center; margin-bottom: 15px; color: var(--color-primary-red);">累计销量对比（柱状图）</h4>
+            <div class="chart-wrapper small">
+                <canvas id="modelSalesBarChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-container">
+            <h4 style="text-align: center; margin-bottom: 15px; color: var(--color-primary-red);">市场份额占比（饼图）</h4>
+            <div class="chart-wrapper pie">
+                <canvas id="marketSharePieChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">市场结构分析</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>增程式车型主导：</strong>L系列合计183,338辆，占比89.74%，显示增程式技术路线为主力</li>
+                <li><strong>L6成为销量担当：</strong>作为五座中大型SUV，L6以44.23%占比成为绝对主力车型</li>
+                <li><strong>纯电车型起步：</strong>MEGA/i8/i6合计22,947辆，占比11.23%，仍处于市场培育期</li>
+                <li><strong>新车型潜力：</strong>i8于7月上市，9月达5,716辆；i6于9月上市，首月404辆</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- 第3页：分车型逐月销量趋势 -->
+<div class="page content-page">
+    <div class="page-title">二、分车型销量结构分析（续）</div>
+
+    <div class="section-title">2.3 主力车型逐月销量趋势（多线图）</div>
+    <div class="chart-container">
+        <div class="chart-wrapper">
+            <canvas id="multiLineChart"></canvas>
+        </div>
+    </div>
+    <div class="data-source">数据来源：CPCA/CnEVPost，2025年5月-10月</div>
+
+    <div class="section-title">2.4 增程式 vs 纯电车型销量对比（堆叠柱状图）</div>
+    <div class="chart-container">
+        <div class="chart-wrapper">
+            <canvas id="stackedBarChart"></canvas>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <strong>趋势洞察：</strong>
+        <ul class="bullet-list">
+            <li><strong>L6稳定领先：</strong>6个月始终保持第一，4月16,755辆 → 9月12,325辆</li>
+            <li><strong>L7表现稳健：</strong>保持第二位置，月销6,000-10,000辆区间</li>
+            <li><strong>MEGA逐月增长：</strong>4月仅103辆 → 9月3,277辆，增长31.8倍</li>
+            <li><strong>纯电车型占比提升：</strong>4月0.3% → 9月14.68%（含i8、i6）</li>
+        </ul>
+    </div>
+</div>
+
+<!-- 第4页：IGBT供应链分析 -->
+<div class="page content-page">
+    <div class="page-title">三、IGBT（绝缘栅双极型晶体管）供应链</div>
+
+    <div class="section-title">3.1 应用车型与技术参数</div>
+    <div class="info-card">
+        <div class="info-card-title">核心应用</div>
+        <div class="info-card-content">
+            <strong>应用车型：</strong>增程式车型（理想L6、L7、L8、L9）<br>
+            <strong>技术平台：</strong>750V电压平台，双电机双电控系统<br>
+            <strong>系统功率：</strong>330kW（理想L9）
+        </div>
+    </div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>车型名称</th>
+                <th>单车用量</th>
+                <th>主要Tier1供应商</th>
+                <th>主要Tier2/上游供应商</th>
+                <th>关键技术参数</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>理想L6</td>
+                <td><span class="data-available">2个IGBT逆变模块</span><br>（双电机各1个）</td>
+                <td>汇川技术（联合动力）<br>时代电气<br>理想自研电控（常州汇想）</td>
+                <td>英飞凌（早期主导）<br>中车时代半导体（7.5代沟槽型IGBT）<br>比亚迪半导体（未确认）</td>
+                <td>750V电压平台<br>双电机双电控系统<br>前后双电机配置<br>沟槽场截止型IGBT<br>ASIL-D功能安全</td>
+            </tr>
+            <tr>
+                <td>理想L7</td>
+                <td><span class="data-available">2个IGBT逆变模块</span><br>（双电机各1个）</td>
+                <td>汇川技术（联合动力）<br>时代电气<br>理想自研电控（常州汇想）</td>
+                <td>英飞凌（早期主导）<br>中车时代半导体（7.5代沟槽型IGBT）<br>比亚迪半导体（未确认）</td>
+                <td>750V电压平台<br>双电机双电控系统<br>沟槽场截止型IGBT<br>ASIL-D功能安全</td>
+            </tr>
+            <tr>
+                <td>理想L8</td>
+                <td><span class="data-available">2个IGBT逆变模块</span><br>（双电机各1个）</td>
+                <td>汇川技术（联合动力）<br>时代电气<br>理想自研电控（常州汇想）</td>
+                <td>英飞凌（早期主导）<br>中车时代半导体（7.5代沟槽型IGBT）<br>比亚迪半导体（未确认）</td>
+                <td>750V电压平台<br>双电机双电控系统<br>沟槽场截止型IGBT<br>ASIL-D功能安全</td>
+            </tr>
+            <tr>
+                <td>理想L9</td>
+                <td><span class="data-available">2个IGBT逆变模块</span><br>（双电机各1个）</td>
+                <td>汇川技术（联合动力）<br>时代电气<br>理想自研电控（常州汇想）</td>
+                <td>英飞凌（早期主导）<br>中车时代半导体（7.5代沟槽型IGBT）<br>比亚迪半导体（未确认）</td>
+                <td>750V电压平台<br>双电机双电控系统<br>系统功率330kW（前130kW+后200kW）<br>沟槽场截止型IGBT<br>ASIL-D功能安全</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="data-source">数据来源：新浪财经，2025-02-13；dramx.com，2022-2024</div>
+
+    <div class="section-title">3.2 供应商关系说明</div>
+    <div class="info-card">
+        <div class="info-card-title">汇川技术（联合动力）- Tier1主力</div>
+        <div class="info-card-content">
+            2021年与理想合资成立<strong>常州汇想新能源</strong>（理想持股87.34%），提供联合动力电驱系统。2024年上半年向理想供应电控采购额达<strong style="color: var(--color-primary-red);">20.08亿元人民币</strong>。汇川技术为理想L系列车型提供电控逆变器，是理想IGBT模块的主要集成商。
+            <br><span style="font-size: 12px; color: var(--text-color-light);">来源：新浪财经，2025-02-13</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">中车时代电气 - Tier1/Tier2双角色</div>
+        <div class="info-card-content">
+            为理想提供IGBT功率模块技术，并计划量产理想自主设计的<strong>XPM模块</strong>（二合一功率模块，寄生电感降低50%，芯片总面积减少45%）。2022年在中国新能源车功率模块市场份额<strong style="color: var(--color-primary-red);">12.4%</strong>，排名第4。到2026年，理想与中车时代在增程式功率模块市场份额有望超过<strong style="color: var(--color-primary-red);">40%</strong>。
+            <br><span style="font-size: 12px; color: var(--text-color-light);">来源：casmita.com，2024-02；hztsltd.com，2022-2024</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">理想自研电驱工厂</div>
+        <div class="info-card-content">
+            <strong>常州理想零部件产业园</strong>自建电驱工厂，自研并生产部分电机控制器，实现核心技术自主可控。
+            <br><span style="font-size: 12px; color: var(--text-color-light);">来源：ab-sm.com，2025-02-13</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">英飞凌（Infineon）- 早期主导供应商</div>
+        <div class="info-card-content">
+            2019年在中国新能源车IGBT市场占比约<strong style="color: var(--color-primary-red);">49.3%</strong>，居首位。理想ONE等早期车型主要使用英飞凌的IGBT模块。近期理想正转向国产供应链，但英飞凌仍占有一定份额。
+            <br><span style="font-size: 12px; color: var(--text-color-light);">来源：开源证券研报，2021-08</span>
+        </div>
+    </div>
+
+    <div class="section-title">3.3 供应量估算</div>
+    <div class="info-card">
+        <div class="info-card-title">2023年全年估算</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>理想2023年交付量：</strong>376,030辆（增程车型）</li>
+                <li><strong>单车IGBT模块：</strong>2个（双电机双逆变器）</li>
+                <li><strong>估算总需求：</strong>约<span style="color: var(--color-primary-red); font-size: 16px; font-weight: bold;">75万只IGBT模块</span></li>
+            </ul>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：第一财经，2024-01；补充内容数据推算</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">2025年4-9月估算（基于L9）</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>L9交付量：</strong>25,953辆</li>
+                <li><strong>估算IGBT模块：</strong>约5.19万套逆变器</li>
+                <li><strong>注：</strong>实际采购量因冗余和备件需求可能略高于理论用量</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-title">3.4 市场份额与国产替代进程</div>
+    <div class="info-card">
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>英飞凌份额变化：</strong>从约70%主导地位转向国产替代，但仍保持较大份额</li>
+                <li><strong>中车时代崛起：</strong>2022年市场份额12.4%（全国第4），在理想供应链中占比持续提升</li>
+                <li><strong>国产化目标：</strong>到2026年，理想与中车时代在增程式功率模块市场份额有望超过40%，直接冲击国际巨头垄断</li>
+                <li><strong>比亚迪半导体：</strong>在中国IGBT市场占比约20%，但目前尚无证据显示其直接供应理想</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <strong>供应链策略总结：</strong>
+        <ul class="bullet-list">
+            <li><strong>多元化布局：</strong>通过绑定中车时代、汇川等，实现IGBT供应链本土化多元布局</li>
+            <li><strong>自主研发：</strong>理想与中车时代合作开发XPM二合一功率模块，支持800V高压到400V平台，预计2026年量产</li>
+            <li><strong>供应安全：</strong>有效降低对单一外资的依赖，提高供应链安全性和议价能力</li>
+        </ul>
+    </div>
+</div>
+
+<!-- 第5页：SiC功率器件供应链分析 -->
+<div class="page content-page">
+    <div class="page-title">四、SiC功率器件（碳化硅）供应链</div>
+
+    <div class="section-title">4.1 应用车型与技术参数</div>
+    <div class="info-card">
+        <div class="info-card-title">核心应用</div>
+        <div class="info-card-content">
+            <strong>应用车型：</strong>纯电车型（理想MEGA、i8、i6）<br>
+            <strong>技术平台：</strong>800V高压平台，5C超充<br>
+            <strong>关键优势：</strong>峰值充电功率520kW，全SiC模块设计
+        </div>
+    </div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>车型名称</th>
+                <th>单车用量</th>
+                <th>主要Tier1供应商</th>
+                <th>主要Tier2/上游供应商</th>
+                <th>关键技术参数</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>理想MEGA</td>
+                <td><span class="data-available">全SiC方案</span><br>双电机：2个SiC逆变模块<br>（约6个半桥模块）</td>
+                <td>理想自研（苏州斯科半导体LPM模块）<br>意法半导体（第三代1200V SiC MOSFET）<br>安森美（EliteSiC裸芯片）</td>
+                <td><strong>芯片供应：</strong>三安半导体/芯联集成（代工晶圆）<br><strong>封装：</strong>苏州斯科半导体<br><strong>外购：</strong>意法半导体、安森美</td>
+                <td>800V高压平台<br>1200V SiC MOSFET器件<br>5C快充（峰值520kW）<br>前155kW+后245kW双电机<br>全桥功率封装设计</td>
+            </tr>
+            <tr>
+                <td>理想i8</td>
+                <td><span class="data-available">全SiC方案</span><br>双电机（高配）：2个SiC逆变模块<br>单电机（中配）：1个SiC逆变模块</td>
+                <td>理想自研（苏州斯科半导体LPM模块）<br>意法半导体<br>安森美</td>
+                <td><strong>芯片供应：</strong>三安半导体/芯联集成（2024年初量产交付）<br><strong>封装：</strong>苏州斯科半导体<br><strong>外购：</strong>意法半导体、安森美</td>
+                <td>800V高压平台<br>1200V SiC MOSFET<br>5C快充<br>总功率400kW（前155kW+后245kW）<br>搭载理想自研LPM模块</td>
+            </tr>
+            <tr>
+                <td>理想i6</td>
+                <td><span class="data-available">全SiC方案</span><br>AD Max四驱：2个SiC逆变模块<br>AD Pro后驱：1个SiC逆变模块</td>
+                <td>理想自研（苏州斯科半导体）<br>意法半导体<br>安森美</td>
+                <td><strong>芯片供应：</strong>三安半导体/芯联集成<br><strong>封装：</strong>苏州斯科半导体<br><strong>外购：</strong>意法半导体、安森美</td>
+                <td>800V高压平台<br>1200V SiC器件<br>5C快充<br>后驱版250kW/四驱版400kW<br>全SiC模块设计</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="data-source">数据来源：ab-sm.com，2024-03-01；ndanev.com，2025-02-14；xchuxing.com，2025</div>
+
+    <div class="section-title">4.2 SiC供应商详细说明</div>
+
+    <div class="info-card">
+        <div class="info-card-title">意法半导体（ST）- 国际主力供应商</div>
+        <div class="info-card-content">
+            <strong>签约时间：</strong>2023年12月<br>
+            <strong>供应产品：</strong>第三代1200V SiC MOSFET<br>
+            <strong>市场地位：</strong>全球SiC器件市场占据<span style="color: var(--color-primary-red); font-weight: bold;">50%+</span>份额<br>
+            <strong>供货安排：</strong>2025-2027年分批向理想交付碳化硅MOSFET<br>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：szlcsc.com，2023-12-22；ST News，2023-12</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">安森美（Onsemi）- 国际第二供应商</div>
+        <div class="info-card-content">
+            <strong>签约时间：</strong>2024年1月续签长期协议<br>
+            <strong>供应产品：</strong>EliteSiC 1200V裸芯片（裸晶圆形式）<br>
+            <strong>优势：</strong>裸晶圆供货有助于理想和合作方自行封装差异化模块<br>
+            <strong>应用：</strong>理想下一代800V车型采用安森美EliteSiC 1200V裸芯片<br>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：esmchina.com，2024-01；cnledw.com，2024-01</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">苏州斯科半导体（理想自研）- 国产化核心</div>
+        <div class="info-card-content">
+            <strong>成立时间：</strong>2022年3月（理想+湖南三安合资）<br>
+            <strong>产能规划：</strong>年产<span style="color: var(--color-primary-red); font-weight: bold;">240万只</span>碳化硅半桥功率模块（可支持约40万台车）<br>
+            <strong>投产时间：</strong>2024年正式投产<br>
+            <strong>装机时间：</strong>2025年2月自研SiC芯片完成装机，2025年6月发布LPM模块<br>
+            <strong>核心产品：</strong>理想自研高压碳化硅功率模块<strong>LPM（Li Power Module）</strong><br>
+            <strong>技术创新：</strong>
+            <ul style="margin-top: 8px;">
+                <li>异常晶圆缺陷筛选技术（UIS测试），高温反偏老化失效率降低近一个数量级</li>
+                <li>一体式全桥功率封装设计，高精度小型化电流传感器集成</li>
+                <li>兼容800V至400V平台</li>
+            </ul>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：sanan-ic.com，2022-08；ab-sm.com，2025-02-13；eet-china.com，2024-01</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">芯联集成 - 晶圆代工合作伙伴</div>
+        <div class="info-card-content">
+            <strong>合作时间：</strong>2024年初开始量产交付<br>
+            <strong>角色：</strong>代工生产理想设计的SiC晶圆<br>
+            <strong>意义：</strong>实现碳化硅功率芯片国产化，保障供应链安全<br>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：eet-china.com，2024-01；esmchina.com，2024</span>
+        </div>
+    </div>
+
+    <div class="section-title">4.3 供应量估算</div>
+    <div class="info-card">
+        <div class="info-card-title">2024-2025年需求预测</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>纯电车型销量：</strong>2024年MEGA/i8/i6预计累计数万辆</li>
+                <li><strong>双电机配置：</strong>每辆2套SiC逆变器（6个半桥模块）</li>
+                <li><strong>估算需求：</strong>2024-2025年SiC功率模块需求量在<span style="color: var(--color-primary-red); font-weight: bold;">数万套规模</span></li>
+                <li><strong>产能储备：</strong>苏州斯科240万只半桥模块年产能可支持约40万台车</li>
+                <li><strong>晶圆需求：</strong>每年所需SiC晶圆可能在<span style="color: var(--color-primary-red); font-weight: bold;">数万片以上</span>（每片可切割上千个芯片）</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-title">4.4 市场份额与供应策略</div>
+    <div class="info-card">
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>全球格局：</strong>意法半导体占据全球SiC器件市场50%+份额，安森美、英飞凌、Wolfspeed等占据重要份额</li>
+                <li><strong>双保险策略：</strong>自研（苏州斯科）+外购（ST、安森美）双路线，降低缺芯风险</li>
+                <li><strong>国产化目标：</strong>若苏州斯科顺利量产，理想纯电车型SiC功率模块国产化率有望达到<span style="color: var(--color-primary-red); font-weight: bold;">50%以上</span></li>
+                <li><strong>市场占比提升：</strong>2024-2025年，理想+三安自研模块有望抢占国内SiC模块<span style="color: var(--color-primary-red); font-weight: bold;">10%以上</span>份额</li>
+                <li><strong>供应安全：</strong>长协锁定ST、安森美产能，自研补充关键模块，"JIT+战略库存"模式保障供应</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <strong>技术亮点与战略意义：</strong>
+        <ul class="bullet-list">
+            <li><strong>800V+5C超充：</strong>峰值充电功率达520kW（理想MEGA实测），全SiC方案提升效率和降低损耗</li>
+            <li><strong>LPM模块创新：</strong>3年半研发，异常晶圆筛选、一体式全桥封装、集成高精度电流传感器</li>
+            <li><strong>自主可控：</strong>理想成为中国整车厂中少数具备自供SiC能力的企业，突破国际垄断</li>
+            <li><strong>产业带动：</strong>与三安合作加速国内SiC产业发展，提升国产SiC器件市场占有率</li>
+        </ul>
+    </div>
+</div>
+
+<!-- 第6页：车载摄像头供应链分析 -->
+<div class="page content-page">
+    <div class="page-title">五、车载摄像头供应链</div>
+
+    <div class="section-title">5.1 主要车型摄像头配置</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>车型名称</th>
+                <th>单车用量</th>
+                <th>主要Tier1供应商</th>
+                <th>关键技术参数</th>
+                <th>数据来源</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>理想L9</td>
+                <td><span class="data-available">11颗（AD Max标配）</span></td>
+                <td>舜宇智领（6颗8MP+2MP）<br>欧菲光（5颗2MP）<br>德赛西威（IPU04域控）</td>
+                <td>前视2颗8MP（120° FOV，识别550米）<br>侧前后各2颗8MP<br>后视1颗2MP，环视4颗2MP<br>禾赛AT128激光雷达</td>
+                <td>智能汽车俱乐部，2022-10<br>理想汽车官方，2022-06</td>
+            </tr>
+            <tr>
+                <td>理想L8 Pro</td>
+                <td><span class="data-available">9颗</span></td>
+                <td>欧菲光（9颗镜头）</td>
+                <td>前视1颗8MP<br>周视4颗2MP<br>环视4颗2MP<br>后视1颗2MP<br>地平线J5芯片（128 TOPS）</td>
+                <td>智能汽车俱乐部，2022-10</td>
+            </tr>
+            <tr>
+                <td>理想L8 Max</td>
+                <td><span class="data-available">11颗</span></td>
+                <td>舜宇智领、欧菲光</td>
+                <td>配置同L9<br>英伟达Orin-X双芯片（508 TOPS）</td>
+                <td>智能汽车俱乐部，2022-10</td>
+            </tr>
+            <tr>
+                <td>理想L7 Pro</td>
+                <td><span class="data-available">9颗</span></td>
+                <td>欧菲光、舜宇智领</td>
+                <td>配置同L8 Pro</td>
+                <td>智能汽车俱乐部，2022-10</td>
+            </tr>
+            <tr>
+                <td>理想L7 Max</td>
+                <td><span class="data-available">11颗</span></td>
+                <td>舜宇智领、欧菲光</td>
+                <td>配置同L9</td>
+                <td>智能汽车俱乐部，2022-10</td>
+            </tr>
+            <tr>
+                <td>理想L6</td>
+                <td><span class="data-available">AD Pro：9颗</span><br><span class="data-available">AD Max：11颗</span><br>（推测）</td>
+                <td>推测：舜宇智领、欧菲光<br>（参考L7/L8配置）</td>
+                <td>提供AD Pro/AD Max两版本<br>Pro版9颗、Max版11颗<br>配置类似L7/L8</td>
+                <td>新出行，2024</td>
+            </tr>
+            <tr>
+                <td>理想MEGA</td>
+                <td><span class="data-available">4颗（300万像素360°环视）</span></td>
+                <td><span class="data-unavailable">未披露</span></td>
+                <td>4颗3MP 360°全景影像<br>不配备激光雷达和高阶ADAS摄像头<br>主打低风阻设计</td>
+                <td>理想汽车官方，2024-03</td>
+            </tr>
+            <tr>
+                <td>理想i8</td>
+                <td><span class="data-available">约12颗</span><br>（车外11颗+车内1-2颗DMS）<br>其中6颗800万像素+5颗200/300万像素</td>
+                <td>推测：舜宇智领、欧菲光<br>德赛西威（域控）</td>
+                <td>AD Max版：<br>• 前视2颗8MP（120° FOV，识别550米）<br>• 禾赛AT128激光雷达<br>• Thor-U芯片（700 TOPS）<br>AD Pro版：地平线J6M</td>
+                <td>新出行，2024-07；xchuxing.com，2025</td>
+            </tr>
+            <tr>
+                <td>理想i6</td>
+                <td><span class="data-available">4颗（300万像素环视）</span><br>+高级ADAS摄像头（未披露数量）</td>
+                <td><span class="data-unavailable">未披露</span></td>
+                <td>标配4颗300万像素环视摄像头<br>360°全景影像<br>环视极窄空间泊车辅助<br>全系AD Max配置</td>
+                <td>新出行，2024-11</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="data-source">数据来源：智能汽车俱乐部，2022-10；理想汽车官方，2022-06；新出行，2024</div>
+
+    <div class="section-title">5.2 Tier2 CMOS传感器全球市场份额（饼图）</div>
+    <div class="chart-container">
+        <div class="chart-wrapper pie">
+            <canvas id="cameraMarketShareChart"></canvas>
+        </div>
+    </div>
+    <div class="data-source">数据来源：ICV Tank、潮电智库，2022-2023</div>
+
+    <div class="section-title">5.3 理想L9摄像头供应量估算</div>
+    <div class="info-card">
+        <div class="info-card-title">供应量计算（唯一可计算车型）</div>
+        <div class="info-card-content">
+            <strong>理想L9：</strong>11颗/车 × 25,953辆 = <span style="color: var(--color-primary-red); font-size: 18px; font-weight: bold;">285,483颗</span>（28.5万颗）
+            <br><span style="font-size: 12px; color: var(--text-color-light);">数据口径：2025年4月-9月累计交付量</span>
+        </div>
+    </div>
+
+    <div class="section-title">5.4 Tier2供应商与技术参数补充</div>
+    <div class="info-card">
+        <div class="info-card-title">安森美（Onsemi）- CMOS图像传感器主力</div>
+        <div class="info-card-content">
+            <strong>供应产品：</strong>800万像素AR0820AT系列CMOS传感器<br>
+            <strong>性能参数：</strong>120°广角，550米探测距离<br>
+            <strong>市场地位：</strong>2022年全球车规CIS市场占比约<span style="color: var(--color-primary-red); font-weight: bold;">37%</span>（第一位）<br>
+            <strong>应用：</strong>理想L9前视及侧向高分辨率摄像头<br>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：eet-china.com，2022-10；ICV Tank，2022-2023</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">佑驾创新（Minieye）- 前向单目方案</div>
+        <div class="info-card-content">
+            <strong>供应产品：</strong>前向单目摄像头方案<br>
+            <strong>集成芯片：</strong>地平线Journey 3芯片<br>
+            <strong>功能：</strong>风挡模块内进行物体识别和部分ADAS算法处理，与主域控协同工作<br>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：智能汽车俱乐部，2022-10</span>
+        </div>
+    </div>
+
+    <div class="section-title">5.5 摄像头技术参数详解</div>
+    <div class="info-card">
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>前视摄像头：</strong>800万像素广角，两枚前置组合实现最长550米探测距离，水平视场约120°</li>
+                <li><strong>侧向摄像头：</strong>800万像素，覆盖车辆两侧前后方中远距感知，弥补毫米波雷达侧向不足</li>
+                <li><strong>环视摄像头：</strong>200-300万像素，安装在车头、车尾和左右后视镜下，用于360°全景影像和泊车辅助</li>
+                <li><strong>车规级要求：</strong>工作温度-40~85℃，高动态范围(HDR)图像传感器，适应强光/夜晚环境</li>
+                <li><strong>镜头规格：</strong>舜宇提供6P高解析车规镜头，视场角60°~120°，前视模组带加热除雾装置</li>
+                <li><strong>网络传输：</strong>800万像素摄像头通过GMSL高速串行接口传输，每秒数十兆比特</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-title">5.6 供应量估算与市场份额</div>
+    <div class="info-card">
+        <div class="info-card-title">2023年全年估算</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>理想2023年交付量：</strong>约37.6万辆L系列车型</li>
+                <li><strong>平均单车摄像头：</strong>保守估计8颗/车</li>
+                <li><strong>估算总需求：</strong>超过<span style="color: var(--color-primary-red); font-size: 16px; font-weight: bold;">300万颗</span>摄像头模块</li>
+                <li><strong>L9单车型（2025年4-9月）：</strong>25,953辆 × 11颗 = 约28.5万颗</li>
+            </ul>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：第一财经，2024-01；CPCA，2025；补充内容数据推算</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">供应商份额分配</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>舜宇智领：</strong>L9中供应6颗（约55%份额），全球车载摄像头市占率约<span style="color: var(--color-primary-red); font-weight: bold;">8.1%</span>（2022年第一位）</li>
+                <li><strong>欧菲光：</strong>L9中供应5颗（约45%份额），L8/L7 Pro版独家供应商，全球市占率约5.5%（第四位）</li>
+                <li><strong>Tier2芯片：</strong>安森美占全球车规CIS市场37%（2021年第一），索尼约19%，豪威科技约8%</li>
+            </ul>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：潮电智库，2022-2023；ICV Tank，2022</span>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <strong>供应链策略总结：</strong>
+        <ul class="bullet-list">
+            <li><strong>双供应商策略：</strong>舜宇+欧菲光多供应商，保障供应稳定，平衡成本和质量</li>
+            <li><strong>不被单一供应商绑架：</strong>享受国内龙头厂商高质量模组，通过竞争确保供货稳定、价格合理</li>
+            <li><strong>全方位感知：</strong>实现360°感知+远距探测+夜间识别，为城市NOA、高速NOA提供坚实感知基础</li>
+            <li><strong>算力支撑：</strong>L9 AD Max拥有2×NVIDIA Orin-X（总508 TOPS）+ 2×地平线J3/J5协处理</li>
+        </ul>
+    </div>
+</div>
+
+<!-- 第7页：车规级LED供应链分析 -->
+<div class="page content-page">
+    <div class="page-title">六、车规级LED供应链</div>
+
+    <div class="section-title">6.1 各车型LED应用特征</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>车型名称</th>
+                <th>单车用量</th>
+                <th>主要供应商</th>
+                <th>关键技术/规格参数</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>理想L6</td>
+                <td><span class="data-unavailable">估算500+颗LED</span><br>（未公开确认）</td>
+                <td><span class="data-unavailable">推测类似L7/L8供应商</span></td>
+                <td>LED矩阵式大灯<br>贯穿式LED尾灯<br>全车氛围灯（RGB可调）</td>
+            </tr>
+            <tr>
+                <td>理想L7</td>
+                <td><span class="data-unavailable">估算500+颗LED</span><br>（未公开确认）</td>
+                <td>推测：海拉/海德莱特</td>
+                <td>星环LED大灯带<br>贯穿式LED尾灯<br>全车氛围灯（多色可调）</td>
+            </tr>
+            <tr>
+                <td>理想L8</td>
+                <td><span class="data-unavailable">估算500+颗LED</span><br>（未公开确认）</td>
+                <td>推测：海拉/海德莱特</td>
+                <td>星环LED大灯带<br>贯穿式LED尾灯<br>全车氛围灯</td>
+            </tr>
+            <tr>
+                <td>理想L9</td>
+                <td><span class="data-available">估算500+颗LED</span><br>（头灯+尾灯+氛围灯+智驾指示灯）</td>
+                <td><strong>前大灯：</strong>海纳川-海拉（常州工厂）<br><strong>尾灯：</strong>江苏常诚车业<br><strong>辅助灯：</strong>江苏海德莱特</td>
+                <td><strong>星环贯穿日行灯：</strong>近2米超长均匀发光，无断点<br><strong>前大灯：</strong>LED投射模组（约70mm直径），远光照射200m+<br><strong>尾灯：</strong>贯穿设计（熏黑透明外罩+红色扩散内罩）<br><strong>智驾指示灯：</strong>5颗（黄色静止/蓝绿色自驾）<br><strong>灯控：</strong>无极调光，流动转向，微秒级响应<br><strong>总光通量：</strong>超过1500流明，色温约6000K</td>
+            </tr>
+            <tr>
+                <td>理想MEGA</td>
+                <td><span class="data-unavailable">数据不可得</span></td>
+                <td><span class="data-unavailable">数据不可得</span></td>
+                <td>低风阻设计配合LED照明系统</td>
+            </tr>
+            <tr>
+                <td>理想i8</td>
+                <td><span class="data-unavailable">数据不可得</span></td>
+                <td><span class="data-unavailable">数据不可得</span></td>
+                <td>智能大灯系统<br>（可能含激光大灯或高像素LED）</td>
+            </tr>
+            <tr>
+                <td>理想i6</td>
+                <td><span class="data-unavailable">数据不可得</span></td>
+                <td><span class="data-unavailable">数据不可得</span></td>
+                <td>智能大灯系统</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">6.2 行业供应商格局（未确认为理想供应商）</div>
+
+    <div class="charts-row">
+        <div class="chart-container">
+            <h4 style="text-align: center; margin-bottom: 15px; color: var(--color-primary-red);">Tier1车灯总成中国市占率</h4>
+            <div class="chart-wrapper pie">
+                <canvas id="ledTier1Chart"></canvas>
+            </div>
+            <div class="data-source">来源：车灯研究院，2023-2024</div>
+        </div>
+        <div class="chart-container">
+            <h4 style="text-align: center; margin-bottom: 15px; color: var(--color-primary-red);">Tier2 LED芯片全球市占率</h4>
+            <div class="chart-wrapper pie">
+                <canvas id="ledTier2Chart"></canvas>
+            </div>
+            <div class="data-source">来源：中国报告大厅，2024</div>
+        </div>
+    </div>
+
+    <div class="section-title">6.3 供应商详细信息补充</div>
+    <div class="info-card">
+        <div class="info-card-title">海纳川-海拉（HELLA）- 前大灯总成主力</div>
+        <div class="info-card-content">
+            <strong>合资背景：</strong>北京海纳川汽车部件与德国海拉HELLA合资（常州工厂）<br>
+            <strong>供应产品：</strong>理想L9前大灯总成<br>
+            <strong>市场地位：</strong>海拉是全球前三大车灯供应商，光学设计和制造工艺达到国际一流水准<br>
+            <strong>技术特点：</strong>LED投射模组、远近光一体设计、精密散热结构<br>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：车灯研究院，dengdengschool.com，2022</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">江苏常诚车业 - 尾灯总成供应商</div>
+        <div class="info-card-content">
+            <strong>供应产品：</strong>理想L9贯穿式LED尾灯总成<br>
+            <strong>技术特长：</strong>国内知名灯具制造商，专注于汽车尾灯和信号灯，擅长贯穿式灯带等复杂工艺<br>
+            <strong>尾灯特点：</strong>近2米长一体星环LED尾灯，中间无断点，均匀红光发光<br>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：智能汽车资源网，smartautoclub.com，2022-10</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">江苏海德莱特 - 辅助灯具供应商</div>
+        <div class="info-card-content">
+            <strong>供应产品：</strong>L9高位刹车灯及侧标志灯等小灯<br>
+            <strong>技术特长：</strong>擅长LED信号灯具，是多家主机厂的小灯供应商<br>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：车灯研究院，dengdengschool.com，2022</span>
+        </div>
+    </div>
+
+    <div class="section-title">6.4 LED芯片Tier2供应商推测</div>
+    <div class="info-card">
+        <div class="info-card-content">
+            <strong>注：</strong>由于Tier1灯具厂一般自行选择光源方案，理想并未直接披露LED芯片供应商。以下为行业惯例推测：
+            <ul class="bullet-list" style="margin-top: 10px;">
+                <li><strong>前大灯高功率LED：</strong>可能采用欧司朗（ams OSRAM）、日亚化学（Nichia）等国际品牌芯片，确保亮度和寿命</li>
+                <li><strong>尾灯和氛围灯：</strong>可能采用Lumileds、Cree、三星等品牌LED芯片</li>
+                <li><strong>国产芯片：</strong>不排除部分采用三安光电等国产LED厂商供货（海拉与三安有LED合作基础）</li>
+                <li><strong>全球LED芯片市场：</strong>欧司朗、Lumileds、Nichia、Cree/Wolfspeed、首尔半导体占据超过80%车用LED市占率</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-title">6.5 供应量估算</div>
+    <div class="info-card">
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>2023年理想交付量：</strong>37.6万辆</li>
+                <li><strong>估算单车LED用量：</strong>约200颗LED/车（包含外部照明和内部氛围）</li>
+                <li><strong>粗略估算：</strong>2023年理想LED芯片用量可能达到<span style="color: var(--color-primary-red); font-size: 16px; font-weight: bold;">数亿颗</span>规模（约7.5亿颗）</li>
+                <li><strong>灯具总成：</strong>前大灯约75万对，尾灯约75万对，高位刹车灯等约75万只</li>
+                <li><strong>采购金额估算：</strong>按单车灯具价值3000元计算，37万辆对应约<span style="color: var(--color-primary-red); font-weight: bold;">11亿元</span>灯具采购</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <strong>供应链特点与数据缺口：</strong>
+        <ul class="bullet-list">
+            <li><strong>供应链模式：</strong>"国际大厂（HELLA）+本土配套（常诚车业、海德莱特）"组合</li>
+            <li><strong>高度保密：</strong>LED供应链仍然是理想数据披露最少的环节，具体用量和芯片品牌未公开</li>
+            <li><strong>技术亮点：</strong>星环贯穿灯采用厚壁光导材料一次成型，近2米超长均匀发光，工艺挑战极大</li>
+            <li><strong>智能交互：</strong>5颗智驾状态指示灯（黄灯静止/蓝绿灯自驾），提升人机交互体验</li>
+            <li><strong>数据缺口：</strong>精确单车LED颗数、LED芯片供应商、供应份额占比仍然缺失，属于保密级别商业信息</li>
+        </ul>
+    </div>
+</div>
+
+<!-- 第8页：电流传感器供应链分析 -->
+<div class="page content-page">
+    <div class="page-title">七、电流传感器供应链</div>
+
+    <div class="section-title">7.1 各车型电流传感器应用</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>车型名称</th>
+                <th>单车用量</th>
+                <th>主要供应商</th>
+                <th>关键技术/规格参数</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>理想L6</td>
+                <td rowspan="4"><span class="data-available">估算8-10颗/车</span><br>（行业惯例推测）<br><br>• 电机控制器：6个相电流传感器（双电机）<br>• 电池主回路：1个高精度传感器<br>• OBC/DCDC：各1个</td>
+                <td rowspan="4"><strong>推测供应商：</strong><br>Melexis（比利时）<br>Allegro（美国）<br>LEM莱姆（瑞士）<br>TDK Micronas（德国）<br>多维科技（国产）<br>森思泰克（国产）<br><br><strong>注：</strong>未找到理想官方确认信息</td>
+                <td rowspan="4"><strong>电机逆变器：</strong><br>• 每个电机3个相电流传感器<br>• 精度：±1%以内，带宽数十kHz<br>• 技术：开放环霍尔效应传感器<br>• 量程：±300A<br><br><strong>BMS主回路：</strong><br>• 分流电阻+隔离放大 或 高精度霍尔传感模块<br>• 量程：±1000A（快充峰值）<br>• 精度：<1%<br><br><strong>车规要求：</strong><br>• 工作温度：-40~125℃<br>• 符合AEC-Q100/200规范<br>• ASIL功能安全等级</td>
+            </tr>
+            <tr>
+                <td>理想L7</td>
+            </tr>
+            <tr>
+                <td>理想L8</td>
+            </tr>
+            <tr>
+                <td>理想L9</td>
+            </tr>
+            <tr>
+                <td>理想MEGA</td>
+                <td rowspan="3"><span class="data-available">估算8-10颗/车</span><br>（行业惯例推测）<br><br>800V高压系统需要更高耐压等级传感器</td>
+                <td rowspan="3"><strong>推测供应商：</strong><br>Melexis（比利时）<br>Allegro（美国）<br>LEM莱姆（瑞士）<br>多维科技（国产TMR）<br><br><strong>理想XPM模块：</strong><br>集成式高精度电流传感器（小型化设计，可能采用TMR阵列）</td>
+                <td rowspan="3"><strong>800V高压系统：</strong><br>• 更高耐压等级要求<br>• 应用于BMS、电驱系统、充电系统<br>• 量程：±500A至±1000A<br>• 精度：±0.5%至±1%<br>• 技术：霍尔式/分流式/TMR磁阻式<br><br><strong>理想XPM模块创新：</strong><br>• 集成式高精度电流传感器<br>• TMR（隧道磁阻）阵列技术<br>• 无需磁芯，体积小、响应快<br>• 精度可达0.5%以内</td>
+            </tr>
+            <tr>
+                <td>理想i8</td>
+            </tr>
+            <tr>
+                <td>理想i6</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">7.2 全球市场供应商格局（未确认为理想供应商）</div>
+
+    <div class="chart-container">
+        <h4 style="text-align: center; margin-bottom: 15px; color: var(--color-primary-red);">电流传感器全球市场份额（柱状图）</h4>
+        <div class="chart-wrapper">
+            <canvas id="currentSensorChart"></canvas>
+        </div>
+    </div>
+    <div class="data-source">数据来源：QYResearch，2025；恒州博智，2025</div>
+
+    <div class="section-title">7.3 电流传感器应用场景</div>
+    <div class="info-card">
+        <div class="info-card-title">主要应用系统</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>BMS电池管理系统：</strong>实时监测电池组充放电电流，保护电池安全</li>
+                <li><strong>电驱系统：</strong>监测电机驱动电流，优化能量转换效率</li>
+                <li><strong>充电系统（OBC/DC-DC）：</strong>监测充电电流，确保充电安全与效率</li>
+                <li><strong>800V高压系统（纯电车型）：</strong>需要更高精度和耐压等级的电流传感器</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-title">7.4 推测供应商详细信息</div>
+    <div class="info-card">
+        <div class="info-card-title">Melexis（比利时）- 可能的主力供应商</div>
+        <div class="info-card-content">
+            <strong>市场地位：</strong>全球车规电流传感器领导者之一<br>
+            <strong>产品：</strong>霍尔效应电流传感芯片（闭环/开环）<br>
+            <strong>参考案例：</strong>蔚来汽车公开选择Melexis为战略性电流传感器芯片供应商<br>
+            <strong>应用场景：</strong>牵引逆变器电流采样，测量±300A，线性输出，符合ASIL功能安全<br>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：eet-china.com，2023；Melexis官方，2023</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">LEM莱姆电子（瑞士）- 传统模块领导者</div>
+        <div class="info-card-content">
+            <strong>产品：</strong>高精度霍尔传感模块（HC系列）<br>
+            <strong>量程：</strong>±1000A，精度<1%<br>
+            <strong>应用：</strong>BMS主回路高精度电流读数<br>
+            <strong>市场份额：</strong>全球电流传感器市场约<span style="color: var(--color-primary-red); font-weight: bold;">22.5%</span>（第一位）<br>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：lem.com；QYResearch，2025</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">Allegro Microsystems（美国）</div>
+        <div class="info-card-content">
+            <strong>产品：</strong>多款车规电流传感芯片<br>
+            <strong>市场份额：</strong>全球约<span style="color: var(--color-primary-red); font-weight: bold;">16.5%</span>（第二位）<br>
+            <strong>应用：</strong>被广泛用于电机和BMS系统<br>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：QYResearch，2025</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">多维科技（国产）- 新兴TMR技术</div>
+        <div class="info-card-content">
+            <strong>技术：</strong>TMR（隧道磁阻）传感器<br>
+            <strong>优势：</strong>小型高精度，已在部分新能源车电机控制应用<br>
+            <strong>潜在合作：</strong>理想XPM模块中的集成式电流传感器可能采用TMR技术<br>
+            <span style="font-size: 12px; color: var(--text-color-light);">来源：行业报道，2024</span>
+        </div>
+    </div>
+
+    <div class="section-title">7.5 供应量估算</div>
+    <div class="info-card">
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>2023年理想交付量：</strong>376,030辆</li>
+                <li><strong>估算单车用量：</strong>8颗/车（保守估计）</li>
+                <li><strong>估算总需求：</strong>约<span style="color: var(--color-primary-red); font-size: 16px; font-weight: bold;">300万只</span>传感器元件</li>
+                <li><strong>供应商策略：</strong>理想不太可能依赖单一供应商，而是多渠道采购或自研结合</li>
+                <li><strong>月度需求（2024年）：</strong>按月销3万辆、每车8颗计算，月度需求约24万只</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-title">7.6 市场份额与国产化趋势</div>
+    <div class="info-card">
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>全球格局：</strong>LEM（22.5%）、Allegro（16.5%）、Melexis（11%）等国际厂商主导</li>
+                <li><strong>蔚来案例：</strong>蔚来汽车公开选择Melexis为战略供应商，理想可能也采用类似方案</li>
+                <li><strong>国产替代：</strong>多维科技、森思泰克等国内厂商崛起，但整体市占率仍很低</li>
+                <li><strong>理想XPM模块：</strong>若成功采用自研集成方案，将是国产电流传感技术的突破</li>
+                <li><strong>供应链隐蔽性：</strong>电流传感器通过Tier1随总成集成，理想不直接采购，因此供应商信息不透明</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <strong>供应链特点与数据缺口：</strong>
+        <ul class="bullet-list">
+            <li><strong>多元化隐蔽策略：</strong>可能使用国际成熟芯片，又在关键模块内自行集成传感功能</li>
+            <li><strong>成本占比低：</strong>每只传感器几十元，理想更看重性能和安全冗余，而非压低采购价</li>
+            <li><strong>供应链盲区：</strong>无官方确认供应商，这是理想供应链研究的重要盲区之一</li>
+            <li><strong>技术创新：</strong>理想XPM模块集成高精度电流传感器，体现自主研发能力</li>
+            <li><strong>数据缺口：</strong>精确单车用量、具体供应商、供应份额占比均无法获得公开确认</li>
+        </ul>
+    </div>
+</div>
+
+<!-- 第9页：MCU供应链分析 -->
+<div class="page content-page">
+    <div class="page-title">八、MCU（微控制单元）供应链</div>
+
+    <div class="section-title">8.1 各车型MCU应用概览</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>车型名称</th>
+                <th>单车用量</th>
+                <th>主要Tier1供应商</th>
+                <th>主要Tier2/上游供应商</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>理想L6</td>
+                <td>约45-73颗<br>（不同配置）</td>
+                <td rowspan="4">德赛西威（智驾域控IPU04、座舱域控）<br>博世（ESP、iBoost）<br>科博达（DCC）<br>汇川联合动力（电驱）<br>欣旺达/宁德时代（BMS）</td>
+                <td rowspan="4">英飞凌AURIX TC3x（Safety MCU）<br>NVIDIA Thor-U/Orin-X<br>地平线J6M/J5<br>高通8295P<br>NXP S32系列<br>瑞萨RH850<br>芯驰E3</td>
+            </tr>
+            <tr>
+                <td>理想L7</td>
+                <td>约45-73颗<br>（不同配置）</td>
+            </tr>
+            <tr>
+                <td>理想L8</td>
+                <td>约45-73颗<br>（不同配置）</td>
+            </tr>
+            <tr>
+                <td>理想L9</td>
+                <td>约45-73颗<br>（不同配置）</td>
+            </tr>
+            <tr>
+                <td>理想MEGA</td>
+                <td>约45-55颗</td>
+                <td>同L6</td>
+                <td>同L6（纯电平台，智驾配置较低）</td>
+            </tr>
+            <tr>
+                <td>理想i8</td>
+                <td>约60-73颗</td>
+                <td>同L6</td>
+                <td>同L6（800V平台，全系Thor-U或J6M）</td>
+            </tr>
+            <tr>
+                <td>理想i6</td>
+                <td>约45-60颗</td>
+                <td>同L6</td>
+                <td>同L6（800V平台，全系AD Max）</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="data-source">数据来源：德赛西威投资者调研，2024-09；理想汽车官方，2025-05</div>
+
+    <div class="section-title">8.2 MCU应用域分布（单车估算）</div>
+    <div class="chart-container">
+        <h4 style="text-align: center; margin-bottom: 15px; color: var(--color-primary-red);">单车MCU应用域分布（堆叠柱状图）</h4>
+        <div class="chart-wrapper small">
+            <canvas id="mcuDomainChart"></canvas>
+        </div>
+    </div>
+
+    <div class="section-title">8.3 关键MCU芯片技术参数</div>
+
+    <div class="info-card">
+        <div class="info-card-title">智驾域MCU</div>
+        <div class="info-card-content">
+            <strong>NVIDIA Thor-U：</strong>750 TOPS算力，4nm制程，2025年5月在理想智驾焕新版量产
+            <br><strong>地平线J6M：</strong>128 TOPS算力，支持城区NOA，2025年5月量产
+            <br><span style="font-size: 12px; color: var(--text-color-light);">来源：理想汽车官方，2025-05</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">座舱域MCU</div>
+        <div class="info-card-content">
+            <strong>高通8295P：</strong>120 TOPS AI算力，8核Kryo CPU，5nm制程，2024年3月开始应用
+            <br><span style="font-size: 12px; color: var(--text-color-light);">来源：德赛西威，2024-09</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">Safety MCU（功能安全）</div>
+        <div class="info-card-content">
+            <strong>英飞凌AURIX TC3x：</strong>TriCore 1.6.2架构，6核300MHz，40nm制程，ASIL-D功能安全
+            <br><span style="font-size: 12px; color: var(--text-color-light);">来源：英飞凌官方，2024-06</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">车身/底盘MCU</div>
+        <div class="info-card-content">
+            <strong>NXP S32K系列：</strong>ARM Cortex-M架构，ASIL-D功能安全，应用于车灯、车门、座椅、电源管理等控制器
+            <br><strong>瑞萨RH850系列：</strong>单片机，应用于车身和底盘域
+            <br><strong>芯驰E3：</strong>ARM Cortex-R5F双核锁步，最高4对R52+内核配置可选，主频可达800MHz，片上SRAM高达5MB，ASIL-D功能安全
+            <br><strong>量产应用：</strong>已在理想L系列、理想MEGA等车型上实现量产，应用场景包括新一代车身域控制器、激光雷达控制单元等
+            <br><strong>出货量：</strong>芯驰E3系列出货已超<span style="color: var(--color-primary-red); font-weight: bold;">800万片</span>，涵盖包括理想等40余款车型
+            <br><span style="font-size: 12px; color: var(--text-color-light);">来源：芯驰科技官方，2024；xinhuanet.com，2025-04；zhihu.com，2025</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">理想星环OS首个本土MCU合作伙伴</div>
+        <div class="info-card-content">
+            <strong>合作伙伴：</strong>芯驰科技E3系列
+            <br><strong>意义：</strong>理想星环OS（自研车载操作系统）的首个本土车规MCU适配芯片
+            <br><strong>国产化进展：</strong>在车身、底盘等领域逐步以芯驰E3替换部分NXP/Renesas方案
+            <br><span style="font-size: 12px; color: var(--text-color-light);">来源：eeworld.com.cn，2024</span>
+        </div>
+    </div>
+</div>
+
+<!-- 第10页：MCU市场份额与数据完整性 -->
+<div class="page content-page">
+    <div class="page-title">八、MCU供应链（续）& 九、数据完整性分析</div>
+
+    <div class="section-title">8.4 全球车规MCU市场份额（2023年）</div>
+    <div class="chart-container">
+        <div class="chart-wrapper pie">
+            <canvas id="mcuMarketShareChart"></canvas>
+        </div>
+    </div>
+    <div class="data-source">数据来源：TechInsights，2024；esmchina.com，2023</div>
+
+    <div class="section-title">8.5 理想MCU供应量估算</div>
+    <div class="info-card">
+        <div class="info-card-title">2023年全年估算</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>理想2023年交付量：</strong>376,030辆</li>
+                <li><strong>单车MCU用量：</strong>平均25颗/车（保守估计）</li>
+                <li><strong>估算总需求：</strong>约<span style="color: var(--color-primary-red); font-size: 16px; font-weight: bold;">940万颗</span>MCU/SoC芯片</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">主要芯片分类需求</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>高通8155芯片：</strong>2023年月销约3万台，大部分双座舱芯片配置，月需求约6万片，年需求约72万片</li>
+                <li><strong>英飞凌Aurix：</strong>每车至少2颗（动力域和安全域），年需求超75万颗</li>
+                <li><strong>芯驰E3：</strong>按每车2-3颗计算，理想年需求量可能在百万片级</li>
+                <li><strong>NVIDIA Orin/Thor：</strong>高配车型双芯片，年需求数十万片级</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-title">8.6 供应商份额与国产化进展</div>
+    <div class="info-card">
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>全球格局：</strong>瑞萨约22.5%，NXP约21.5%，英飞凌略低于20%，前五大厂合计超75%</li>
+                <li><strong>理想采购结构估算：</strong>
+                    <ul style="margin-top: 8px; margin-left: 20px;">
+                        <li>瑞萨+NXP+英飞凌三家合计应超<span style="color: var(--color-primary-red); font-weight: bold;">60%</span>以上（各种小MCU和安全芯片）</li>
+                        <li>高通算舱占约10%</li>
+                        <li>英伟达ADAS占约5%</li>
+                        <li>地平线和芯驰合计不到5%，但占比逐年提升</li>
+                    </ul>
+                </li>
+                <li><strong>国产化趋势：</strong>
+                    <ul style="margin-top: 8px; margin-left: 20px;">
+                        <li>芯驰E3在理想L系列、MEGA实现量产，出货量已超800万片（含所有客户）</li>
+                        <li>地平线J系列AI芯片在理想中的应用使理想成为国内汽车算力芯片重要客户，2022年实现超10万片出货</li>
+                        <li>2-3年后，当芯驰、地平线更高性能新一代芯片成熟，理想可能在中央域控上尝试国产方案替换NVIDIA/Qualcomm</li>
+                    </ul>
+                </li>
+                <li><strong>供应链策略：</strong>理想采取"强者恒强、后来者入局"策略——国际巨头提供成熟方案占主要份额，国内厂商以合作姿态逐步扩大存在感</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <strong>MCU供应链核心特点：</strong>
+        <ul class="bullet-list">
+            <li><strong>信息最透明：</strong>主要芯片型号、算力参数、制程节点、主要Tier1供应商均可获得</li>
+            <li><strong>平衡策略：</strong>高性能SoC依赖进口（高通/英伟达），但在次要领域引入国产芯片替换</li>
+            <li><strong>国产突破：</strong>芯驰E3成为理想星环OS首个本土MCU适配芯片，标志着国产化起步</li>
+            <li><strong>供应保障：</strong>2023年全球MCU产能缓解，理想较顺利获得所需芯片，产量不受缺芯掣肘</li>
+        </ul>
+    </div>
+
+    <div class="section-title">9.1 六大关键部件数据完整性评估</div>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>关键部件</th>
+                <th>单车用量</th>
+                <th>主要供应商</th>
+                <th>供应量估算</th>
+                <th>供应份额占比</th>
+                <th>技术参数</th>
+                <th>完整性评级</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>IGBT</td>
+                <td><span class="data-available">✅ 已补充</span><br>（2个模块/车）</td>
+                <td><span class="data-available">✅ 已完善</span><br>（Tier1+Tier2详细）</td>
+                <td><span class="data-available">✅ 已补充</span><br>（2023年约75万只）</td>
+                <td><span class="data-available">✅ 已补充</span><br>（市场份额变化趋势）</td>
+                <td><span class="data-available">✅ 已完善</span><br>（技术参数+XPM模块）</td>
+                <td style="background-color: #d4edda;">✅ 大幅改善</td>
+            </tr>
+            <tr>
+                <td>SiC功率器件</td>
+                <td><span class="data-available">✅ 已补充</span><br>（全SiC方案详细配置）</td>
+                <td><span class="data-available">✅ 已完善</span><br>（自研+外购双路线）</td>
+                <td><span class="data-available">✅ 已补充</span><br>（数万套+产能规划）</td>
+                <td><span class="data-available">✅ 已补充</span><br>（国产化目标50%+）</td>
+                <td><span class="data-available">✅ 已完善</span><br>（LPM模块技术创新）</td>
+                <td style="background-color: #d4edda;">✅ 大幅改善</td>
+            </tr>
+            <tr>
+                <td>车载摄像头</td>
+                <td><span class="data-available">✅ 已完善</span><br>（各车型详细配置）</td>
+                <td><span class="data-available">✅ 已补充</span><br>（舜宇+欧菲光+Tier2）</td>
+                <td><span class="data-available">✅ 已补充</span><br>（2023年超300万颗）</td>
+                <td><span class="data-available">✅ 已补充</span><br>（舜宇55%+欧菲45%）</td>
+                <td><span class="data-available">✅ 已完善</span><br>（技术参数详解）</td>
+                <td style="background-color: #d4edda;">✅ 大幅改善</td>
+            </tr>
+            <tr>
+                <td>车规级LED</td>
+                <td><span class="data-available">⚠️ 已估算</span><br>（500+颗/车推测）</td>
+                <td><span class="data-available">✅ 已补充</span><br>（L9确认：海拉+常诚+海德莱特）</td>
+                <td><span class="data-available">✅ 已估算</span><br>（2023年约7.5亿颗）</td>
+                <td><span class="data-unavailable">⚠️ 推测</span><br>（Tier2芯片供应商推测）</td>
+                <td><span class="data-available">✅ 已补充</span><br>（L9星环灯技术详解）</td>
+                <td style="background-color: #fff3cd;">⚠️ 显著改善</td>
+            </tr>
+            <tr>
+                <td>电流传感器</td>
+                <td><span class="data-available">✅ 已估算</span><br>（8-10颗/车推测）</td>
+                <td><span class="data-available">⚠️ 已推测</span><br>（Melexis等国际厂商）</td>
+                <td><span class="data-available">✅ 已估算</span><br>（2023年约300万只）</td>
+                <td><span class="data-available">⚠️ 已推测</span><br>（参考蔚来案例）</td>
+                <td><span class="data-available">✅ 已完善</span><br>（应用场景+XPM集成）</td>
+                <td style="background-color: #fff3cd;">⚠️ 显著改善</td>
+            </tr>
+            <tr>
+                <td>MCU</td>
+                <td><span class="data-available">✅ 已有范围</span><br>（45-73颗/车）</td>
+                <td><span class="data-available">✅ 已完善</span><br>（芯驰E3国产化详情）</td>
+                <td><span class="data-available">✅ 已补充</span><br>（2023年约940万颗）</td>
+                <td><span class="data-available">✅ 已补充</span><br>（采购结构估算60%+）</td>
+                <td><span class="data-available">✅ 已完善</span><br>（国产化进展详解）</td>
+                <td style="background-color: #d4edda;">✅ 高度完整</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="section-title">9.2 数据缺失原因总结</div>
+    <div class="charts-row">
+        <div class="info-card" style="flex: 1;">
+            <div class="info-card-title">高度保密信息</div>
+            <div class="info-card-content">
+                <ul class="bullet-list">
+                    <li>单车精确用量（涉及BOM成本）</li>
+                    <li>供应商具体份额占比</li>
+                    <li>采购单价与总金额</li>
+                </ul>
+            </div>
+        </div>
+        <div class="info-card" style="flex: 1;">
+            <div class="info-card-title">新车型信息不足</div>
+            <div class="info-card-content">
+                <ul class="bullet-list">
+                    <li>理想i6（2025年9月上市）</li>
+                    <li>理想i8（2025年7月上市）</li>
+                    <li>理想L6（信息披露较少）</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="highlight-box" style="background-color: #d4edda; border-left-color: #28a745;">
+        <strong style="color: #155724;">✅ 数据补充成果总结：</strong>
+        <ul class="bullet-list" style="color: #155724;">
+            <li><strong>销量数据完整性高：</strong>2025年4-9月历史销量数据完整，来源权威（理想官方+CPCA）</li>
+            <li><strong>供应链数据大幅改善：</strong>通过补充内容，IGBT、SiC、摄像头、MCU四大模块的单车用量、供应商、供应量、市场份额等数据得到显著完善</li>
+            <li><strong>IGBT/SiC国产化清晰：</strong>明确了理想从英飞凌转向中车时代的IGBT国产化路径，以及自研+外购的SiC双保险策略</li>
+            <li><strong>LED供应链取得突破：</strong>确认了L9的三家灯具供应商（海拉、常诚车业、海德莱特），虽然芯片级供应商仍需推测</li>
+            <li><strong>电流传感器填补空白：</strong>虽然官方未确认，但基于行业惯例和蔚来案例，推测出可能的供应商和用量</li>
+            <li><strong>MCU信息最透明完整：</strong>芯驰E3国产化进展、出货量、市场份额等数据完整，成为本报告数据最完善模块</li>
+            <li><strong>供应量估算完成：</strong>基于2023年376,030辆交付量，完成了所有六大部件的年度供应量估算</li>
+        </ul>
+    </div>
+
+    <div class="info-card" style="background-color: #fff3cd; border: 1px solid #ffc107;">
+        <div class="info-card-title" style="color: #856404;">📊 补充前后对比</div>
+        <div class="info-card-content" style="color: #856404;">
+            <table style="width: 100%; margin-top: 10px;">
+                <tr style="background-color: #fff;">
+                    <th style="padding: 8px; border: 1px solid #ddd;">模块</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">补充前状态</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">补充后状态</th>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">IGBT</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">⚠️ 部分可得</td>
+                    <td style="padding: 8px; border: 1px solid #ddd; background-color: #d4edda;">✅ 大幅改善（单车用量+供应量+市场份额）</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">SiC</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">⚠️ 部分可得</td>
+                    <td style="padding: 8px; border: 1px solid #ddd; background-color: #d4edda;">✅ 大幅改善（自研LPM模块+产能规划+国产化目标）</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">摄像头</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">⚠️ 部分可得</td>
+                    <td style="padding: 8px; border: 1px solid #ddd; background-color: #d4edda;">✅ 大幅改善（完整车型配置+供应商份额+年度用量）</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">LED</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">❌ 严重不足</td>
+                    <td style="padding: 8px; border: 1px solid #ddd; background-color: #fff3cd;">⚠️ 显著改善（确认L9三家供应商+技术参数）</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">电流传感器</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">⚠️ 部分可得</td>
+                    <td style="padding: 8px; border: 1px solid #ddd; background-color: #fff3cd;">⚠️ 显著改善（推测供应商+用量估算）</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">MCU</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">✅ 较为完整</td>
+                    <td style="padding: 8px; border: 1px solid #ddd; background-color: #d4edda;">✅ 高度完整（芯驰E3详情+供应量+市场份额）</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 第11页：建议与展望 -->
+<div class="page content-page">
+    <div class="page-title">十、建议后续研究方向与展望</div>
+
+    <div class="section-title">10.1 数据获取建议</div>
+
+    <div class="info-card">
+        <div class="info-card-title">1. 供应商年报与投资者调研</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li>关注主要Tier1供应商（德赛西威、博世、科博达等）的年报披露</li>
+                <li>跟踪供应商投资者调研会议记录，获取客户结构和供货量信息</li>
+                <li>监测上市供应商的关联交易公告</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">2. 理想汽车财报采购数据</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li>关注理想汽车财报中的采购数据披露（如与汇川技术的20.08亿元采购）</li>
+                <li>分析理想汽车季度财报中的成本结构变化</li>
+                <li>跟踪理想汽车与供应商的战略合作公告</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">3. 新车型拆解报告</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li>跟踪专业机构对理想i6/i8的拆解报告和技术解析</li>
+                <li>关注汽车媒体的深度技术评测</li>
+                <li>监测专利申请和技术论文披露</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-title">10.2 理想汽车供应链战略展望</div>
+
+    <div class="info-card">
+        <div class="info-card-title">垂直整合趋势</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>自研电控：</strong>通过常州汇想（理想持股87.34%）自研电机控制器</li>
+                <li><strong>自研SiC：</strong>通过苏州斯科（理想+三安合资）自研SiC芯片和模块</li>
+                <li><strong>自研域控：</strong>理想自研XCU中央域控制器，整合多域功能</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">国产化替代</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>IGBT：</strong>从英飞凌（70%份额）转向中车时代半导体</li>
+                <li><strong>MCU：</strong>车身域开始应用国产芯驰E3（ASIL-D）</li>
+                <li><strong>智驾芯片：</strong>引入国产地平线J6M（128 TOPS）与NVIDIA Thor-U并行</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-title">多供应商策略</div>
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>SiC：</strong>自研（苏州斯科）+外购（意法半导体、安森美）双保险</li>
+                <li><strong>智驾芯片：</strong>NVIDIA Thor-U + 地平线J6M双平台，降低风险</li>
+                <li><strong>摄像头：</strong>舜宇智领 + 欧菲光多供应商，保障供应稳定</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-title">10.3 行业对标与竞争态势</div>
+
+    <div class="info-card">
+        <div class="info-card-content">
+            <ul class="bullet-list">
+                <li><strong>增程式技术路线：</strong>理想在增程式领域保持领先，L系列累计占比89.74%</li>
+                <li><strong>纯电车型起步：</strong>MEGA/i8/i6合计占比11.23%，仍处于市场培育期，面临特斯拉、比亚迪竞争</li>
+                <li><strong>智驾能力提升：</strong>2025年智驾焕新版引入Thor-U（750 TOPS），竞争力显著增强</li>
+                <li><strong>800V平台：</strong>纯电车型全系采用800V+5C快充，对标保时捷、小鹏等高端品牌</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <strong>关键洞察：</strong>
+        理想汽车通过"自研+合资+多供应商"的供应链策略，在关键零部件领域逐步实现垂直整合和国产化替代，同时保持供应链灵活性。但LED车灯、电流传感器等非核心卖点零部件的供应链透明度极低，未来可能成为潜在风险点。
+    </div>
+</div>
+
+<!-- 感谢页 -->
+<div class="page cover-page">
+    <div class="cover-title" style="font-size: 60px;">感谢阅读</div>
+    <div class="cover-subtitle" style="font-size: 20px;">
+        本报告基于公开信息整理<br>
+        数据时效：2025年10月28日<br>
+        研究方法：公开信息检索 + 多源交叉验证 + 行业标准推测
+    </div>
+    <div class="cover-info" style="margin-top: 50px;">
+        <p style="font-size: 14px; color: var(--text-color-light);">
+            数据来源：理想汽车官方、CPCA、CnEVPost、<br>
+            供应商官方公告、券商研报、权威行业报告
+        </p>
+    </div>
+    <div class="cover-bottom"></div>
+</div>
+
+<script>
+// Chart.js 全局配置
+Chart.defaults.font.family = "'Microsoft YaHei', 'SimHei', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#333';
+
+// 颜色配置
+const primaryRed = '#e60012';
+const primaryRedDark = '#c50010';
+const colorPalette = [
+    '#e60012', '#ff4444', '#ff7777', '#ffaaaa',
+    '#c50010', '#990000', '#660000', '#330000'
+];
+
+// 1. 月度销售趋势折线图
+const monthlySalesCtx = document.getElementById('monthlySalesChart').getContext('2d');
+new Chart(monthlySalesCtx, {
+    type: 'line',
+    data: {
+        labels: ['2025-04', '2025-05', '2025-06', '2025-07', '2025-08', '2025-09'],
+        datasets: [{
+            label: '月度交付量（辆）',
+            data: [33939, 40856, 36279, 30731, 28529, 33951],
+            borderColor: primaryRed,
+            backgroundColor: 'rgba(230, 0, 18, 0.1)',
+            borderWidth: 3,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            pointBackgroundColor: primaryRed,
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top'
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.dataset.label + ': ' + context.parsed.y.toLocaleString() + '辆';
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return (value / 1000).toFixed(0) + 'K';
+                    }
+                }
+            }
+        }
+    }
+});
+
+// 2. 车型累计销量柱状图
+const modelSalesBarCtx = document.getElementById('modelSalesBarChart').getContext('2d');
+new Chart(modelSalesBarCtx, {
+    type: 'bar',
+    data: {
+        labels: ['理想L6', '理想L7', '理想L9', '理想L8', '理想MEGA', '理想i8', '理想i6'],
+        datasets: [{
+            label: '累计销量（辆）',
+            data: [90379, 44015, 25953, 22991, 14615, 7928, 404],
+            backgroundColor: [
+                'rgba(230, 0, 18, 0.8)',
+                'rgba(230, 0, 18, 0.7)',
+                'rgba(230, 0, 18, 0.6)',
+                'rgba(230, 0, 18, 0.5)',
+                'rgba(197, 0, 16, 0.6)',
+                'rgba(197, 0, 16, 0.5)',
+                'rgba(197, 0, 16, 0.4)'
+            ],
+            borderColor: primaryRed,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.parsed.y.toLocaleString() + '辆';
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return (value / 1000).toFixed(0) + 'K';
+                    }
+                }
+            }
+        }
+    }
+});
+
+// 3. 市场份额饼图
+const marketSharePieCtx = document.getElementById('marketSharePieChart').getContext('2d');
+new Chart(marketSharePieCtx, {
+    type: 'pie',
+    data: {
+        labels: ['理想L6 (44.23%)', '理想L7 (21.55%)', '理想L9 (12.70%)', '理想L8 (11.26%)', '理想MEGA (7.15%)', '理想i8 (3.88%)', '理想i6 (0.20%)'],
+        datasets: [{
+            data: [44.23, 21.55, 12.70, 11.26, 7.15, 3.88, 0.23],
+            backgroundColor: [
+                '#e60012',
+                '#ff3333',
+                '#ff6666',
+                '#ff9999',
+                '#c50010',
+                '#aa0000',
+                '#880000'
+            ],
+            borderWidth: 2,
+            borderColor: '#fff'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'right',
+                labels: {
+                    padding: 10,
+                    font: {
+                        size: 11
+                    }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.label + ': ' + context.parsed + '%';
+                    }
+                }
+            }
+        }
+    }
+});
+
+// 4. 主力车型逐月销量多线图
+const multiLineCtx = document.getElementById('multiLineChart').getContext('2d');
+new Chart(multiLineCtx, {
+    type: 'line',
+    data: {
+        labels: ['2025-04', '2025-05', '2025-06', '2025-07', '2025-08', '2025-09'],
+        datasets: [
+            {
+                label: '理想L6',
+                data: [16755, 18781, 16471, 14830, 11217, 12325],
+                borderColor: '#e60012',
+                backgroundColor: 'rgba(230, 0, 18, 0.1)',
+                borderWidth: 2,
+                pointRadius: 4,
+                tension: 0.3
+            },
+            {
+                label: '理想L7',
+                data: [8102, 10016, 8273, 6237, 5381, 6006],
+                borderColor: '#ff4444',
+                backgroundColor: 'rgba(255, 68, 68, 0.1)',
+                borderWidth: 2,
+                pointRadius: 4,
+                tension: 0.3
+            },
+            {
+                label: '理想L9',
+                data: [3801, 5753, 4893, 3760, 3959, 3787],
+                borderColor: '#ff7777',
+                backgroundColor: 'rgba(255, 119, 119, 0.1)',
+                borderWidth: 2,
+                pointRadius: 4,
+                tension: 0.3
+            },
+            {
+                label: '理想L8',
+                data: [5178, 5312, 4338, 3088, 2639, 2436],
+                borderColor: '#ffaaaa',
+                backgroundColor: 'rgba(255, 170, 170, 0.1)',
+                borderWidth: 2,
+                pointRadius: 4,
+                tension: 0.3
+            },
+            {
+                label: '理想MEGA',
+                data: [103, 994, 2304, 2816, 3121, 3277],
+                borderColor: '#c50010',
+                backgroundColor: 'rgba(197, 0, 16, 0.1)',
+                borderWidth: 2,
+                pointRadius: 4,
+                tension: 0.3
+            },
+            {
+                label: '理想i8',
+                data: [null, null, null, null, 2212, 5716],
+                borderColor: '#990000',
+                backgroundColor: 'rgba(153, 0, 0, 0.1)',
+                borderWidth: 2,
+                pointRadius: 4,
+                tension: 0.3,
+                spanGaps: true
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top'
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        if (context.parsed.y === null) return null;
+                        return context.dataset.label + ': ' + context.parsed.y.toLocaleString() + '辆';
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return (value / 1000).toFixed(0) + 'K';
+                    }
+                }
+            }
+        }
+    }
+});
+
+// 5. 增程式 vs 纯电堆叠柱状图
+const stackedBarCtx = document.getElementById('stackedBarChart').getContext('2d');
+new Chart(stackedBarCtx, {
+    type: 'bar',
+    data: {
+        labels: ['2025-04', '2025-05', '2025-06', '2025-07', '2025-08', '2025-09'],
+        datasets: [
+            {
+                label: '增程式车型',
+                data: [33836, 39862, 33975, 27915, 22418, 24554],
+                backgroundColor: 'rgba(230, 0, 18, 0.8)',
+                borderColor: primaryRed,
+                borderWidth: 1
+            },
+            {
+                label: '纯电车型',
+                data: [103, 994, 2304, 2816, 6111, 9397],
+                backgroundColor: 'rgba(197, 0, 16, 0.6)',
+                borderColor: primaryRedDark,
+                borderWidth: 1
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top'
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.dataset.label + ': ' + context.parsed.y.toLocaleString() + '辆';
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                stacked: true
+            },
+            y: {
+                stacked: true,
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return (value / 1000).toFixed(0) + 'K';
+                    }
+                }
+            }
+        }
+    }
+});
+
+// 6. CMOS传感器市场份额饼图
+const cameraMarketShareCtx = document.getElementById('cameraMarketShareChart').getContext('2d');
+new Chart(cameraMarketShareCtx, {
+    type: 'pie',
+    data: {
+        labels: ['安森美 (42-45%)', '豪威科技 (27-29%)', '索尼 (14-17%)', '其他 (12-14%)'],
+        datasets: [{
+            data: [43.5, 28, 15.5, 13],
+            backgroundColor: [
+                '#e60012',
+                '#ff4444',
+                '#ff7777',
+                '#cccccc'
+            ],
+            borderWidth: 2,
+            borderColor: '#fff'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    padding: 15
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.label + ': ' + context.parsed + '%';
+                    }
+                }
+            }
+        }
+    }
+});
+
+// 7. LED Tier1市场份额饼图
+const ledTier1Ctx = document.getElementById('ledTier1Chart').getContext('2d');
+new Chart(ledTier1Ctx, {
+    type: 'pie',
+    data: {
+        labels: ['华域视觉 (22%)', '星宇股份 (14%)', '法雷奥', '海拉', '其他'],
+        datasets: [{
+            data: [22, 14, 18, 16, 30],
+            backgroundColor: [
+                '#e60012',
+                '#ff4444',
+                '#ff7777',
+                '#ffaaaa',
+                '#cccccc'
+            ],
+            borderWidth: 2,
+            borderColor: '#fff'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    padding: 10,
+                    font: {
+                        size: 10
+                    }
+                }
+            }
+        }
+    }
+});
+
+// 8. LED Tier2芯片市场份额饼图
+const ledTier2Ctx = document.getElementById('ledTier2Chart').getContext('2d');
+new Chart(ledTier2Ctx, {
+    type: 'pie',
+    data: {
+        labels: ['三安光电 (19.72%)', '欧司朗', '日亚化学', '国星光电', '其他'],
+        datasets: [{
+            data: [19.72, 18, 16, 12, 34.28],
+            backgroundColor: [
+                '#e60012',
+                '#ff4444',
+                '#ff7777',
+                '#ffaaaa',
+                '#cccccc'
+            ],
+            borderWidth: 2,
+            borderColor: '#fff'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    padding: 10,
+                    font: {
+                        size: 10
+                    }
+                }
+            }
+        }
+    }
+});
+
+// 9. 电流传感器市场份额柱状图
+const currentSensorCtx = document.getElementById('currentSensorChart').getContext('2d');
+new Chart(currentSensorCtx, {
+    type: 'bar',
+    data: {
+        labels: ['LEM\n(瑞士)', 'Allegro\n(美国)', 'Melexis\n(比利时)', 'TDK Micronas\n(日本)', 'Honeywell\n(美国)', '其他'],
+        datasets: [{
+            label: '市场份额 (%)',
+            data: [22.5, 16.5, 11, 9, 8, 32.5],
+            backgroundColor: [
+                'rgba(230, 0, 18, 0.8)',
+                'rgba(230, 0, 18, 0.7)',
+                'rgba(230, 0, 18, 0.6)',
+                'rgba(230, 0, 18, 0.5)',
+                'rgba(197, 0, 16, 0.6)',
+                'rgba(204, 204, 204, 0.5)'
+            ],
+            borderColor: primaryRed,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return '市场份额: ' + context.parsed.x + '%';
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                beginAtZero: true,
+                max: 35,
+                ticks: {
+                    callback: function(value) {
+                        return value + '%';
+                    }
+                }
+            }
+        }
+    }
+});
+
+// 10. MCU应用域分布堆叠柱状图
+const mcuDomainCtx = document.getElementById('mcuDomainChart').getContext('2d');
+new Chart(mcuDomainCtx, {
+    type: 'bar',
+    data: {
+        labels: ['理想L6/L7/L8/L9\n(45-73颗)', '理想MEGA\n(45-55颗)', '理想i8\n(60-73颗)', '理想i6\n(45-60颗)'],
+        datasets: [
+            {
+                label: '智能驾驶域 (8-15颗)',
+                data: [11.5, 11.5, 11.5, 11.5],
+                backgroundColor: 'rgba(230, 0, 18, 0.9)'
+            },
+            {
+                label: '智能座舱域 (3-4颗)',
+                data: [3.5, 3.5, 3.5, 3.5],
+                backgroundColor: 'rgba(230, 0, 18, 0.7)'
+            },
+            {
+                label: '车身域 (15-25颗)',
+                data: [20, 18, 20, 18],
+                backgroundColor: 'rgba(230, 0, 18, 0.5)'
+            },
+            {
+                label: '底盘域 (8-12颗)',
+                data: [10, 10, 10, 10],
+                backgroundColor: 'rgba(197, 0, 16, 0.7)'
+            },
+            {
+                label: '动力域 (10-15颗)',
+                data: [12.5, 10, 15, 10],
+                backgroundColor: 'rgba(197, 0, 16, 0.5)'
+            },
+            {
+                label: '中央域控 (1-2颗)',
+                data: [1.5, 1.5, 1.5, 1.5],
+                backgroundColor: 'rgba(153, 0, 0, 0.7)'
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'right',
+                labels: {
+                    font: {
+                        size: 10
+                    },
+                    padding: 8
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.dataset.label + ': ' + context.parsed.y + '颗';
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                stacked: true
+            },
+            y: {
+                stacked: true,
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'MCU数量（颗）'
+                }
+            }
+        }
+    }
+});
+
+// 11. MCU全球市场份额饼图
+const mcuMarketShareCtx = document.getElementById('mcuMarketShareChart').getContext('2d');
+new Chart(mcuMarketShareCtx, {
+    type: 'pie',
+    data: {
+        labels: ['英飞凌 (28.5%)', '恩智浦 (25%)', '瑞萨 (20%)', '意法半导体 (15%)', '德州仪器 (10%)', '国产厂商 (2-3%)'],
+        datasets: [{
+            data: [28.5, 25, 20, 15, 10, 2.5],
+            backgroundColor: [
+                '#e60012',
+                '#ff3333',
+                '#ff6666',
+                '#ff9999',
+                '#c50010',
+                '#00aa00'
+            ],
+            borderWidth: 2,
+            borderColor: '#fff'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'right',
+                labels: {
+                    padding: 10,
+                    font: {
+                        size: 11
+                    }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.label + ': ' + context.parsed + '%';
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>
