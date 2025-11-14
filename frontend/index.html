@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web to Presentation - 设置面板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .form-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .form-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        .form-group input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        .range-value {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #667eea;
+            margin-left: 10px;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .status {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .status.info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #1976d2;
+            display: block;
+        }
+
+        .status.success {
+            background: #e8f5e9;
+            color: #388e3c;
+            border-left: 4px solid #388e3c;
+            display: block;
+        }
+
+        .status.error {
+            background: #ffebee;
+            color: #d32f2f;
+            border-left: 4px solid #d32f2f;
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .progress-bar.active {
+            display: block;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .file-list {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .file-item {
+            padding: 8px;
+            background: #f9f9f9;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .info-box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Web to Presentation</h1>
+            <p>HTML网页转PPT转换工具 - 设置面板</p>
+        </div>
+
+        <div class="content">
+            <!-- 图片设置 -->
+            <div class="section">
+                <h2 class="section-title">📷 图片设置</h2>
+
+                <div class="form-group">
+                    <label>
+                        图片分辨率倍数（DPI倍数）
+                        <span class="range-value" id="imageScaleValue">3x</span>
+                    </label>
+                    <input type="range" id="imageScale" min="1" max="5" value="3" step="1">
+                    <div class="info-box" style="margin-top: 10px;">
+                        1x = 96 DPI, 2x = 192 DPI, 3x = 288 DPI (推荐), 4x = 384 DPI, 5x = 480 DPI
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        图片质量（仅JPEG格式）
+                        <span class="range-value" id="imageQualityValue">100%</span>
+                    </label>
+                    <input type="range" id="imageQuality" min="50" max="100" value="100" step="10">
+                </div>
+
+                <div class="form-group">
+                    <label for="imageFormat">图片格式</label>
+                    <select id="imageFormat">
+                        <option value="png">PNG (无损，文件较大)</option>
+                        <option value="jpeg">JPEG (有损压缩，文件较小)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- PPT设置 -->
+            <div class="section">
+                <h2 class="section-title">📊 PPT设置</h2>
+
+                <div class="form-group">
+                    <label for="exportMode">导出模式</label>
+                    <select id="exportMode">
+                        <option value="image">图片模式（高清截图）</option>
+                        <option value="hybrid">混合模式（文字矢量 + 图片）</option>
+                        <option value="vector">矢量模式（纯文字矢量，实验性）</option>
+                    </select>
+                    <div class="info-box" style="margin-top: 10px;">
+                        <strong>图片模式：</strong>完全使用截图，适合复杂布局<br>
+                        <strong>混合模式：</strong>提取文字为矢量，背景/图表使用截图（推荐）<br>
+                        <strong>矢量模式：</strong>尽可能提取所有内容为矢量（可能丢失样式）
+                    </div>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="extractText" checked>
+                    <label for="extractText">提取文字为可编辑文本（矢量）</label>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="separateReports" checked>
+                    <label for="separateReports">为每个HTML文件生成独立PPT</label>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="createCombined" checked>
+                    <label for="createCombined">同时生成合并的PPT文件</label>
+                </div>
+            </div>
+
+            <!-- HTML文件扫描 -->
+            <div class="section">
+                <h2 class="section-title">📂 HTML文件扫描</h2>
+                <button class="btn btn-secondary" onclick="scanFiles()">
+                    <span>🔍</span> 扫描HTML文件
+                </button>
+                <div id="fileList" class="file-list" style="display: none;"></div>
+            </div>
+
+            <!-- 转换控制 -->
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="startConversion()" id="convertBtn">
+                    <span>🚀</span> 开始转换
+                </button>
+                <button class="btn btn-secondary" onclick="resetSettings()">
+                    <span>🔄</span> 重置设置
+                </button>
+            </div>
+
+            <!-- 状态显示 -->
+            <div id="status" class="status"></div>
+            <div id="progressBar" class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 配置
+        const API_BASE = 'http://localhost:5000';
+
+        // 更新range显示值
+        document.getElementById('imageScale').addEventListener('input', (e) => {
+            document.getElementById('imageScaleValue').textContent = e.target.value + 'x';
+        });
+
+        document.getElementById('imageQuality').addEventListener('input', (e) => {
+            document.getElementById('imageQualityValue').textContent = e.target.value + '%';
+        });
+
+        // 获取当前设置
+        function getSettings() {
+            return {
+                image: {
+                    deviceScaleFactor: parseInt(document.getElementById('imageScale').value),
+                    quality: parseInt(document.getElementById('imageQuality').value),
+                    format: document.getElementById('imageFormat').value
+                },
+                ppt: {
+                    exportMode: document.getElementById('exportMode').value,
+                    extractText: document.getElementById('extractText').checked,
+                    separateReports: document.getElementById('separateReports').checked,
+                    createCombined: document.getElementById('createCombined').checked
+                }
+            };
+        }
+
+        // 扫描HTML文件
+        async function scanFiles() {
+            try {
+                showStatus('正在扫描HTML文件...', 'info');
+                const response = await fetch(`${API_BASE}/api/scan`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const fileList = document.getElementById('fileList');
+                    fileList.style.display = 'block';
+                    fileList.innerHTML = `
+                        <div style="font-weight: 600; margin-bottom: 10px;">找到 ${data.files.length} 个HTML文件：</div>
+                        ${data.files.map(file => `<div class="file-item">📄 ${file}</div>`).join('')}
+                    `;
+                    showStatus(`成功扫描到 ${data.files.length} 个HTML文件`, 'success');
+                } else {
+                    showStatus('扫描失败: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showStatus('无法连接到后端服务: ' + error.message, 'error');
+            }
+        }
+
+        // 开始转换
+        async function startConversion() {
+            const settings = getSettings();
+            const convertBtn = document.getElementById('convertBtn');
+
+            try {
+                convertBtn.disabled = true;
+                showStatus('正在启动转换...', 'info');
+                showProgress(0);
+
+                const response = await fetch(`${API_BASE}/api/convert`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(settings)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const taskId = data.task_id;
+                    showStatus('转换任务已启动，正在处理...', 'info');
+                    monitorProgress(taskId);
+                } else {
+                    showStatus('启动转换失败: ' + data.error, 'error');
+                    convertBtn.disabled = false;
+                }
+            } catch (error) {
+                showStatus('无法连接到后端服务: ' + error.message, 'error');
+                convertBtn.disabled = false;
+            }
+        }
+
+        // 监控转换进度
+        async function monitorProgress(taskId) {
+            const interval = setInterval(async () => {
+                try {
+                    const response = await fetch(`${API_BASE}/api/progress/${taskId}`);
+                    const data = await response.json();
+
+                    if (data.status === 'running') {
+                        showStatus(data.message || '正在处理...', 'info');
+                        showProgress(data.progress || 0);
+                    } else if (data.status === 'completed') {
+                        clearInterval(interval);
+                        showStatus('✅ 转换完成！输出目录: ' + data.output_dir, 'success');
+                        showProgress(100);
+                        document.getElementById('convertBtn').disabled = false;
+                    } else if (data.status === 'error') {
+                        clearInterval(interval);
+                        showStatus('❌ 转换失败: ' + data.error, 'error');
+                        document.getElementById('convertBtn').disabled = false;
+                    }
+                } catch (error) {
+                    clearInterval(interval);
+                    showStatus('监控进度时出错: ' + error.message, 'error');
+                    document.getElementById('convertBtn').disabled = false;
+                }
+            }, 1000);
+        }
+
+        // 显示状态
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.className = 'status ' + type;
+            status.textContent = message;
+        }
+
+        // 显示进度
+        function showProgress(percent) {
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            progressBar.classList.add('active');
+            progressFill.style.width = percent + '%';
+        }
+
+        // 重置设置
+        function resetSettings() {
+            document.getElementById('imageScale').value = 3;
+            document.getElementById('imageQuality').value = 100;
+            document.getElementById('imageFormat').value = 'png';
+            document.getElementById('exportMode').value = 'hybrid';
+            document.getElementById('extractText').checked = true;
+            document.getElementById('separateReports').checked = true;
+            document.getElementById('createCombined').checked = true;
+
+            document.getElementById('imageScaleValue').textContent = '3x';
+            document.getElementById('imageQualityValue').textContent = '100%';
+
+            showStatus('设置已重置为默认值', 'success');
+        }
+
+        // 页面加载时自动扫描文件
+        window.addEventListener('load', () => {
+            scanFiles();
+        });
+    </script>
+</body>
+</html>

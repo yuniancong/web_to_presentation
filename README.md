@@ -1,16 +1,19 @@
 # Web to Presentation Converter
 
-将 HTML 网页报告转换为高清图片和 PowerPoint 演示文稿的自动化工具。
+将 HTML 网页报告转换为高清图片和 PowerPoint 演示文稿的自动化工具，提供可视化的前端设置界面。
 
 ## 功能特性
 
+- ✅ **可视化设置界面**：Web界面配置所有转换参数，实时监控转换进度
 - ✅ **高保真渲染**：使用 Playwright 无头浏览器，完美还原网页样式
 - ✅ **图表支持**：完整支持 Chart.js 等动态图表库
-- ✅ **高分辨率**：输出 300 DPI × 3 倍缩放的高清图片（900 DPI）
+- ✅ **灵活分辨率**：1x-5x DPI倍数可选（96-480 DPI）
+- ✅ **多种导出模式**：图片模式、混合模式（文字矢量）、纯矢量模式
 - ✅ **按页分割**：自动识别 `.page` 元素，每页单独输出
 - ✅ **自动化 PPT**：将图片自动组装成 PowerPoint 文件
 - ✅ **批量处理**：支持同时转换多个 HTML 文件
 - ✅ **自动扫描**：自动识别根目录及子目录下的所有 HTML 文件，无需手动配置
+- ✅ **实时进度**：转换过程实时显示进度和状态
 
 ## 系统要求
 
@@ -19,11 +22,49 @@
 - **npm** 或 **yarn**
 - **pip3**
 
-## 快速开始
+## 🚀 快速开始
 
-### 1. 准备 HTML 文件
+### 方式一：使用可视化界面（推荐）
 
-将需要转换的 HTML 文件或包含 HTML 文件的项目文件夹放到本项目的根目录下。例如：
+```bash
+# 启动应用（会自动安装依赖并打开浏览器）
+python3 start.py
+```
+
+或使用npm：
+
+```bash
+npm start
+```
+
+启动后会自动：
+- ✅ 检查并安装所需依赖
+- ✅ 启动后端API服务器
+- ✅ 打开前端设置页面（http://localhost:5000）
+
+在前端界面中可以：
+1. 📂 扫描HTML文件
+2. ⚙️ 配置图片和PPT参数
+3. 🚀 一键启动转换
+4. 📊 实时查看转换进度
+
+### 方式二：使用命令行（传统）
+
+```bash
+# 1. 安装依赖
+npm install
+pip3 install flask flask-cors python-pptx Pillow
+
+# 2. 转换HTML为图片
+node src/html-to-images.js
+
+# 3. 转换图片为PPT
+python3 src/images-to-ppt.py
+```
+
+### 准备 HTML 文件
+
+将需要转换的 HTML 文件放到项目根目录或子目录下：
 
 ```
 web_to_presentation/
@@ -35,34 +76,11 @@ web_to_presentation/
 └── ...
 ```
 
-脚本会**自动扫描**根目录及所有子目录下的 HTML 文件，无需手动配置！
+脚本会**自动扫描**所有 HTML 文件！
 
-### 2. 运行转换
+### 查看输出
 
-最简单的方式是使用一键转换脚本（会自动安装依赖）：
-
-```bash
-chmod +x convert.sh
-./convert.sh
-```
-
-或者手动安装依赖后运行：
-
-```bash
-# 安装 Node.js 依赖
-npm install
-
-# 安装 Python 依赖
-pip3 install -r requirements.txt
-
-# 运行转换
-./convert.sh
-```
-
-### 3. 查看输出
-
-转换完成后，文件将保存在：
-
+转换完成后，文件保存在：
 - **图片**：`output/images/` 目录
 - **PPT**：`output/` 目录下的 `.pptx` 文件
 
@@ -199,18 +217,21 @@ combined_reports.pptx  （所有页面合并版）
 
 ```
 web_to_presentation/
+├── frontend/                          # 前端设置界面
+│   └── index.html                    # Web可视化配置页面
 ├── src/
-│   ├── html-to-images.js     # HTML 转图片工具（Node.js + Puppeteer）
-│   └── images-to-ppt.py      # 图片转 PPT 工具（Python + python-pptx）
+│   ├── html-to-images.js             # HTML转图片（Node.js + Playwright）
+│   ├── html-to-images-config.json    # 图片转换配置（自动生成）
+│   ├── images-to-ppt.py              # 图片转PPT（原始版本）
+│   ├── images-to-ppt-advanced.py     # 高级PPT生成（支持多种模式）
+│   └── api_server.py                 # Flask API服务器
 ├── output/
-│   ├── images/               # 生成的图片
-│   └── *.pptx                # 生成的 PPT
-├── 版本2.html                 # 示例 HTML 报告 1
-├── 理想汽车供应链报告-优化版-2025-1031-1636.html  # 示例 HTML 报告 2
-├── package.json              # Node.js 依赖配置
-├── requirements.txt          # Python 依赖配置
-├── convert.sh                # 一键转换脚本
-└── README.md                 # 本文档
+│   ├── images/                       # 生成的图片
+│   └── *.pptx                        # 生成的PPT文件
+├── start.py                          # 启动脚本（推荐）
+├── package.json                      # Node.js依赖配置
+├── README.md                         # 本文档
+└── USAGE.md                          # 详细使用指南
 ```
 
 ## 常见问题
