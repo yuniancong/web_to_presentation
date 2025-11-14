@@ -1,0 +1,16 @@
+{
+  "name": "web-to-presentation",
+  "version": "1.0.0",
+  "description": "Convert HTML reports to high-resolution images and PowerPoint presentations",
+  "main": "src/html-to-images.js",
+  "scripts": {
+    "convert": "node src/html-to-images.js",
+    "test": "node src/html-to-images.js"
+  },
+  "keywords": ["html", "screenshot", "puppeteer", "ppt", "converter"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.40.0"
+  }
+}
