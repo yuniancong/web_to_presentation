@@ -4,12 +4,13 @@
 
 ## 功能特性
 
-- ✅ **高保真渲染**：使用 Puppeteer 无头浏览器，完美还原网页样式
+- ✅ **高保真渲染**：使用 Playwright 无头浏览器，完美还原网页样式
 - ✅ **图表支持**：完整支持 Chart.js 等动态图表库
-- ✅ **高分辨率**：输出 300 DPI × 2 倍缩放的高清图片
+- ✅ **高分辨率**：输出 300 DPI × 3 倍缩放的高清图片（900 DPI）
 - ✅ **按页分割**：自动识别 `.page` 元素，每页单独输出
 - ✅ **自动化 PPT**：将图片自动组装成 PowerPoint 文件
 - ✅ **批量处理**：支持同时转换多个 HTML 文件
+- ✅ **自动扫描**：自动识别根目录及子目录下的所有 HTML 文件，无需手动配置
 
 ## 系统要求
 
@@ -20,7 +21,32 @@
 
 ## 快速开始
 
-### 1. 安装依赖
+### 1. 准备 HTML 文件
+
+将需要转换的 HTML 文件或包含 HTML 文件的项目文件夹放到本项目的根目录下。例如：
+
+```
+web_to_presentation/
+├── 报告1.html
+├── 报告2.html
+├── my_project/
+│   ├── index.html
+│   └── report.html
+└── ...
+```
+
+脚本会**自动扫描**根目录及所有子目录下的 HTML 文件，无需手动配置！
+
+### 2. 运行转换
+
+最简单的方式是使用一键转换脚本（会自动安装依赖）：
+
+```bash
+chmod +x convert.sh
+./convert.sh
+```
+
+或者手动安装依赖后运行：
 
 ```bash
 # 安装 Node.js 依赖
@@ -28,14 +54,8 @@ npm install
 
 # 安装 Python 依赖
 pip3 install -r requirements.txt
-```
 
-### 2. 运行转换
-
-最简单的方式是使用一键转换脚本：
-
-```bash
-chmod +x convert.sh
+# 运行转换
 ./convert.sh
 ```
 
@@ -82,15 +102,34 @@ python3 src/images-to-ppt.py
 
 ## 配置说明
 
-### HTML 文件位置
+### HTML 文件扫描
 
-默认转换项目根目录下的所有 `.html` 文件。可以在 `src/html-to-images.js` 中修改：
+脚本会**自动扫描**以下位置的 HTML 文件：
+- 项目根目录下的所有 `.html` 文件
+- 所有子目录下的 `.html` 文件
+
+**自动排除**以下目录（不会扫描）：
+- `node_modules/`
+- `output/`
+- `.git/`
+- `dist/`
+- `build/`
+
+如需修改扫描规则，可以在 `src/html-to-images.js` 中调整：
 
 ```javascript
 const CONFIG = {
-  htmlFiles: [
-    path.join(__dirname, '../版本2.html'),
-    path.join(__dirname, '../理想汽车供应链报告-优化版-2025-1031-1636.html')
+  // 扫描模式
+  scanPatterns: [
+    path.join(__dirname, '../*.html'),           // 根目录
+    path.join(__dirname, '../**/*.html'),        // 所有子目录
+  ],
+  // 排除模式
+  excludePatterns: [
+    '**/node_modules/**',
+    '**/output/**',
+    '**/.git/**',
+    // 可以添加更多排除规则...
   ],
   // ...
 };

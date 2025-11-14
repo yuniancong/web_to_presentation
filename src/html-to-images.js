@@ -7,13 +7,23 @@
 const { chromium } = require('playwright');
 const fs = require('fs').promises;
 const path = require('path');
+const { glob } = require('glob');
 
 // Configuration
 const CONFIG = {
   outputDir: path.join(__dirname, '../output/images'),
-  htmlFiles: [
-    path.join(__dirname, '../版本2.html'),
-    path.join(__dirname, '../理想汽车供应链报告-优化版-2025-1031-1636.html')
+  // Scan patterns for HTML files (will scan root directory and subdirectories)
+  scanPatterns: [
+    path.join(__dirname, '../*.html'),           // Root directory
+    path.join(__dirname, '../**/*.html'),        // All subdirectories
+  ],
+  // Exclude patterns (files/folders to ignore)
+  excludePatterns: [
+    '**/node_modules/**',
+    '**/output/**',
+    '**/.git/**',
+    '**/dist/**',
+    '**/build/**'
   ],
   // A4 landscape dimensions in pixels at 96 DPI (standard screen DPI)
   viewport: {
@@ -24,6 +34,31 @@ const CONFIG = {
   imageFormat: 'png',
   imageQuality: 100
 };
+
+/**
+ * Scan for HTML files in the project
+ * @returns {Promise<string[]>} Array of HTML file paths
+ */
+async function scanHtmlFiles() {
+  const allFiles = [];
+
+  for (const pattern of CONFIG.scanPatterns) {
+    try {
+      const files = await glob(pattern, {
+        ignore: CONFIG.excludePatterns,
+        absolute: true,
+        nodir: true // Only match files, not directories
+      });
+      allFiles.push(...files);
+    } catch (error) {
+      console.error(`Error scanning pattern ${pattern}:`, error.message);
+    }
+  }
+
+  // Remove duplicates and sort
+  const uniqueFiles = [...new Set(allFiles)].sort();
+  return uniqueFiles;
+}
 
 /**
  * Ensure output directory exists
@@ -124,18 +159,40 @@ async function main() {
 
   await ensureOutputDir();
 
-  let totalPages = 0;
+  // Scan for HTML files
+  console.log('\n📂 Scanning for HTML files...');
+  const htmlFiles = await scanHtmlFiles();
 
-  for (const htmlFile of CONFIG.htmlFiles) {
+  if (htmlFiles.length === 0) {
+    console.log('⚠️  No HTML files found in the project directory.');
+    console.log('   Please add HTML files to the root directory or subdirectories.');
+    return;
+  }
+
+  console.log(`✓ Found ${htmlFiles.length} HTML file(s):`);
+  htmlFiles.forEach((file, index) => {
+    const relativePath = path.relative(path.join(__dirname, '..'), file);
+    console.log(`  ${index + 1}. ${relativePath}`);
+  });
+
+  let totalPages = 0;
+  let successCount = 0;
+  let failCount = 0;
+
+  for (const htmlFile of htmlFiles) {
     try {
       const pageCount = await convertHtmlToImages(htmlFile);
       totalPages += pageCount;
+      successCount++;
     } catch (error) {
       console.error(`\n❌ Error processing ${htmlFile}:`, error.message);
+      failCount++;
     }
   }
 
-  console.log(`\n✅ Conversion complete! Total pages: ${totalPages}`);
+  console.log(`\n✅ Conversion complete!`);
+  console.log(`   Processed: ${successCount} success, ${failCount} failed`);
+  console.log(`   Total pages: ${totalPages}`);
   console.log(`📁 Output directory: ${CONFIG.outputDir}`);
 }
 
