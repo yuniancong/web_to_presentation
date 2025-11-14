@@ -93,50 +93,107 @@ def run_conversion(task):
         task.progress = 0
         task.message = '正在准备转换...'
 
-        # Step 1: Convert HTML to images (50% of progress)
-        task.message = '正在将HTML转换为图片...'
-        task.progress = 10
+        export_type = task.settings.get('exportType', 'both')
 
-        # Update html-to-images.js config
-        update_html_to_images_config(task.settings['image'])
+        # Determine which steps to run
+        run_images = export_type in ['both', 'images']
+        run_ppt = export_type in ['both', 'ppt']
 
-        # Run Node.js script
-        result = subprocess.run(
-            ['node', str(PROJECT_ROOT / 'src' / 'html-to-images.js')],
-            cwd=PROJECT_ROOT,
-            capture_output=True,
-            text=True
-        )
+        # Step 1: Convert HTML to images (if needed)
+        if run_images:
+            task.message = '正在将HTML转换为图片...'
+            task.progress = 10
+            print(f"\n{'='*60}")
+            print("正在将HTML转换为图片...")
+            print(f"{'='*60}")
 
-        if result.returncode != 0:
-            raise Exception(f"HTML to images conversion failed: {result.stderr}")
+            # Update html-to-images.js config
+            update_html_to_images_config(task.settings['image'])
 
-        task.progress = 50
-        task.message = 'HTML转换完成，正在生成PPT...'
+            # Run Node.js script with real-time output
+            process = subprocess.Popen(
+                ['node', str(PROJECT_ROOT / 'src' / 'html-to-images.js')],
+                cwd=PROJECT_ROOT,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1
+            )
 
-        # Step 2: Convert images to PPT (50% of progress)
-        # Update images-to-ppt.py based on settings
-        result = subprocess.run(
-            [sys.executable, str(PROJECT_ROOT / 'src' / 'images-to-ppt-advanced.py'),
-             '--settings', json.dumps(task.settings['ppt'])],
-            cwd=PROJECT_ROOT,
-            capture_output=True,
-            text=True
-        )
+            # Stream output and update progress
+            for line in iter(process.stdout.readline, ''):
+                if line:
+                    print(line.rstrip())
+                    # Update progress based on output
+                    if '📄 Processing:' in line:
+                        task.progress = min(task.progress + 5, 45)
+                    elif '✓ Page' in line:
+                        task.progress = min(task.progress + 1, 45)
 
-        if result.returncode != 0:
-            raise Exception(f"PPT generation failed: {result.stderr}")
+            process.wait()
 
-        task.progress = 100
+            if process.returncode != 0:
+                raise Exception(f"HTML to images conversion failed with code {process.returncode}")
+
+            task.progress = 50
+            task.message = 'HTML转换完成'
+            print(f"\n✅ HTML转换完成")
+        else:
+            task.progress = 50
+            task.message = '跳过图片生成，使用现有图片...'
+            print("\n⏭️  跳过图片生成，使用现有图片")
+
+        # Step 2: Convert images to PPT (if needed)
+        if run_ppt:
+            task.message = '正在生成PPT...'
+            task.progress = 55
+            print(f"\n{'='*60}")
+            print("正在生成PPT...")
+            print(f"{'='*60}")
+
+            # Run Python script with real-time output
+            process = subprocess.Popen(
+                [sys.executable, str(PROJECT_ROOT / 'src' / 'images-to-ppt-advanced.py'),
+                 '--settings', json.dumps(task.settings['ppt'])],
+                cwd=PROJECT_ROOT,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1
+            )
+
+            # Stream output and update progress
+            for line in iter(process.stdout.readline, ''):
+                if line:
+                    print(line.rstrip())
+                    # Update progress based on output
+                    if '✓ Slide' in line:
+                        task.progress = min(task.progress + 2, 95)
+                    elif 'Creating' in line:
+                        task.progress = min(task.progress + 5, 95)
+
+            process.wait()
+
+            if process.returncode != 0:
+                raise Exception(f"PPT generation failed with code {process.returncode}")
+
+            task.progress = 100
+            task.message = 'PPT生成完成'
+            print(f"\n✅ PPT生成完成")
+        else:
+            task.progress = 100
+            task.message = '仅图片导出完成'
+            print("\n✅ 仅图片导出完成")
+
         task.status = 'completed'
-        task.message = '转换完成！'
         task.output_dir = str(PROJECT_ROOT / 'output')
+        print(f"\n🎉 转换完成！输出目录: {task.output_dir}")
 
     except Exception as e:
         task.status = 'error'
         task.error = str(e)
         task.message = f'转换失败: {str(e)}'
-        print(f"Conversion error: {e}")
+        print(f"\n❌ 转换错误: {e}")
 
 
 def update_html_to_images_config(image_settings):
