@@ -372,8 +372,8 @@
     </div>
 
     <script>
-        // 配置
-        const API_BASE = 'http://localhost:5000';
+        // 配置 - 自动使用当前页面的协议和主机（包括端口）
+        const API_BASE = window.location.origin;
 
         // 更新range显示值
         document.getElementById('imageScale').addEventListener('input', (e) => {
