@@ -14,8 +14,11 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).parent
 API_SERVER_PATH = PROJECT_ROOT / 'src' / 'api_server.py'
-FRONTEND_URL = 'http://localhost:5000'
-API_URL = 'http://localhost:5000'
+
+# Support configurable port via environment variable or default to 5001
+PORT = int(os.environ.get('PORT', 5001))
+FRONTEND_URL = f'http://localhost:{PORT}'
+API_URL = f'http://localhost:{PORT}'
 
 
 def check_dependencies():
@@ -71,13 +74,18 @@ def start_api_server():
     """Start the Flask API server in background"""
     print("🚀 Starting API server...")
 
+    # Prepare environment with PORT setting
+    env = os.environ.copy()
+    env['PORT'] = str(PORT)
+
     # Start server as subprocess
     process = subprocess.Popen(
         [sys.executable, str(API_SERVER_PATH)],
         cwd=PROJECT_ROOT,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True
+        text=True,
+        env=env
     )
 
     # Wait for server to start
